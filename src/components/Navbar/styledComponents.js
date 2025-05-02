@@ -1,0 +1,95 @@
+import styled from "styled-components";
+import { Link } from "react-router-dom";
+
+export const NavbarContainer = styled.nav`
+  background-color: #e3e4e2;
+  padding: 1rem;
+`;
+
+export const NavbarWrapper = styled.div`
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+`;
+
+export const NavbarLogo = styled(Link)`
+  img {
+    height: 90%;
+    width: 100px;
+  }
+`;
+
+export const NavbarLinks = styled.ul`
+  list-style: none;
+  display: flex;
+  margin: 0;
+  padding: 0;
+`;
+
+export const NavbarItem = styled.li`
+  position: relative;
+  margin-left: 2rem;
+
+  &:hover > div {
+    display: block;
+  }
+`;
+
+export const NavbarLink = styled(Link)`
+  color: #046a38;
+  text-decoration: none;
+  font-size: 1rem;
+  font-weight: 500;
+  letter-spacing: 1px;
+  transition: all 0.3s ease;
+  position: relative;
+  background: none;
+  border: none;
+
+  &:hover {
+    color: #f0a500;
+    text-shadow: 0 0 8px rgba(255, 165, 0, 0.7), 0 0 20px rgba(255, 165, 0, 0.6);
+  }
+
+  &:before {
+    content: "";
+    position: absolute;
+    bottom: -3px;
+    left: 0;
+    width: 100%;
+    height: 2px;
+    background: linear-gradient(145deg, #f0a500, #ffde00);
+    transform: scaleX(0);
+    transition: transform 0.3s ease;
+  }
+
+  &:hover:before {
+    transform: scaleX(1);
+  }
+`;
+
+export const Dropdown = styled.div`
+  display: none;
+  position: absolute;
+  top: 40px;
+  left: 0;
+  background-color: #fff;
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+  z-index: 1000;
+  min-width: 200px;
+  padding: 0.5rem 0;
+  border-radius: 6px;
+`;
+
+export const DropdownItem = styled(Link)`
+  display: block;
+  padding: 0.5rem 1rem;
+  color: #333;
+  text-decoration: none;
+  font-size: 0.95rem;
+
+  &:hover {
+    background-color: #f5f5f5;
+    color: #046a38;
+  }
+`;
