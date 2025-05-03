@@ -11,11 +11,13 @@ class App extends Component {
     return (
       <>
         <Navbar />
-        <Routes>
-          <Route path="/" element={<Home />} />
-          <Route path="/checkout" element={<Checkout />} />
-          <Route path="*" element={<PageNotFound />} />
-        </Routes>
+        <div style={{ paddingTop: "9vh" }}>
+          <Routes>
+            <Route path="/" element={<Home />} />
+            <Route path="/checkout" element={<Checkout />} />
+            <Route path="*" element={<PageNotFound />} />
+          </Routes>
+        </div>
       </>
     );
   }

@@ -1,5 +1,13 @@
+html,
 body {
   margin: 0;
   padding: 0;
   background-color: #ff671f;
+  overflow-y: scroll;
+  scrollbar-width: none; /* Firefox */
+}
+
+html::-webkit-scrollbar,
+body::-webkit-scrollbar {
+  display: none; /* Chrome, Safari, Edge */
 }

@@ -3,7 +3,11 @@ import { Link } from "react-router-dom";
 
 export const NavbarContainer = styled.nav`
   background-color: #e3e4e2;
-  padding: 1rem;
+  padding: 1rem 10px;
+  position: fixed;
+  top: 0;
+  z-index: 1000;
+  width: 100%;
 `;
 
 export const NavbarWrapper = styled.div`
@@ -23,7 +27,10 @@ export const NavbarLinks = styled.ul`
   list-style: none;
   display: flex;
   margin: 0;
+  margin-right: 1rem;
   padding: 0;
+  flex-grow: 1;
+  justify-content: flex-end;
 `;
 
 export const NavbarItem = styled.li`
@@ -45,6 +52,7 @@ export const NavbarLink = styled(Link)`
   position: relative;
   background: none;
   border: none;
+  cursor: pointer;
 
   &:hover {
     color: #f0a500;
@@ -71,12 +79,12 @@ export const NavbarLink = styled(Link)`
 export const Dropdown = styled.div`
   display: none;
   position: absolute;
-  top: 40px;
+  top: 10px;
   left: 0;
   background-color: #fff;
   box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
   z-index: 1000;
-  min-width: 200px;
+  min-width: 150px;
   padding: 0.5rem 0;
   border-radius: 6px;
 `;
