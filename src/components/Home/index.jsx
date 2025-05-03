@@ -13,10 +13,13 @@ import {
   PriceAndCartRow,
 } from "./styledComponents";
 import { Carousel } from "react-responsive-carousel";
+import { useNavigate, useLocation } from "react-router-dom";
 import "react-responsive-carousel/lib/styles/carousel.min.css";
 
 const Home = () => {
   const [groupedProducts, setGroupedProducts] = useState({});
+  const navigate = useNavigate();
+  const location = useLocation(); // get current page info
 
   useEffect(() => {
     const fetchProducts = async () => {
@@ -42,43 +45,38 @@ const Home = () => {
   }, []);
 
   const handleAddToCart = (product) => {
-    // Load the existing cart from cookies into a variable
+    // 🔐 Check for auth token
+    const token = Cookies.get("magicTreeToken");
+
+    if (!token) {
+      // ⛔ Not logged in — redirect to login with return URL
+      const currentPath = location.pathname + location.search;
+      navigate(`/login?redirect=${encodeURIComponent(currentPath)}`);
+      return;
+    }
+
+    // 🛒 Continue with cart logic
     const existingCart = Cookies.get("cart");
     let cart = existingCart ? JSON.parse(existingCart) : [];
 
-    console.log("🛒 Product to add:", product);
-    console.log("📦 Existing cart:", cart);
-
-    // Extract only necessary fields from the product
     const productToAdd = {
       _id: product._id,
       name: product.name,
-      image: product.images?.[0] || "", // Take the first image URL
+      image: product.images?.[0] || "",
       price: product.price,
-      discount: product.discount || 0, // If no discount, set to 0
+      discount: product.discount || 0,
       quantity: 1,
     };
 
-    // Check if the product already exists in the cart
     const index = cart.findIndex((item) => item._id === product._id);
 
-    // If product exists, increase the quantity
     if (index !== -1) {
       cart[index].quantity += 1;
-      console.log("🔁 Increased quantity of", product.name);
     } else {
-      // If product doesn't exist, add it to the cart
       cart.push(productToAdd);
-      console.log("✨ Added new product:", product.name);
     }
 
-    // Remove the old cart from cookies
-    Cookies.remove("cart");
-
-    // Save the updated cart in the cookies
     Cookies.set("cart", JSON.stringify(cart), { expires: 7, path: "/" });
-
-    console.log("✅ Updated cart saved in cookies:", cart);
   };
 
   return (

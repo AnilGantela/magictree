@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   CheckoutContainer,
   SectionTitle,
@@ -12,16 +12,34 @@ import {
   BackToHomeLink,
 } from "./styledComponents";
 
-const Checkout = () => {
-  const [cart, setCart] = useState([
-    { id: 1, name: "Product 1", price: 100, quantity: 2 },
-    { id: 2, name: "Product 2", price: 200, quantity: 1 },
-  ]);
+// Utility function to get a cookie by name
+const getCookie = (name) => {
+  const value = `; ${document.cookie}`;
+  const parts = value.split(`; ${name}=`);
+  if (parts.length === 2)
+    return decodeURIComponent(parts.pop().split(";").shift());
+  return null;
+};
 
+const Checkout = () => {
+  const [cart, setCart] = useState([]);
   const [address, setAddress] = useState("");
+
   const discount = 50;
   const deliveryDate = new Date();
   deliveryDate.setDate(deliveryDate.getDate() + 5);
+
+  useEffect(() => {
+    const cartCookie = getCookie("cart");
+    if (cartCookie) {
+      try {
+        const parsedCart = JSON.parse(cartCookie);
+        setCart(parsedCart);
+      } catch (error) {
+        console.error("Failed to parse cart cookie:", error);
+      }
+    }
+  }, []);
 
   const calculateTotal = () =>
     cart.reduce((total, item) => total + item.price * item.quantity, 0) -
@@ -39,11 +57,15 @@ const Checkout = () => {
 
       <SectionTitle>Cart Items</SectionTitle>
       <CartList>
-        {cart.map((item) => (
-          <CartItem key={item.id}>
-            {item.name} - ${item.price} x {item.quantity}
-          </CartItem>
-        ))}
+        {cart.length > 0 ? (
+          cart.map((item) => (
+            <CartItem key={item.id}>
+              {item.name} - ${item.price} x {item.quantity}
+            </CartItem>
+          ))
+        ) : (
+          <CartItem>No items in the cart.</CartItem>
+        )}
       </CartList>
 
       <SectionTitle>Address</SectionTitle>

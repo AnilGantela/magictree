@@ -2,7 +2,7 @@ import styled from "styled-components";
 import { Link } from "react-router-dom";
 
 export const CheckoutContainer = styled.div`
-  height: 100vh;
+  height: 91vh;
   width: 100%;
   padding: 20px;
   box-sizing: border-box;

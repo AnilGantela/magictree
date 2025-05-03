@@ -1,6 +1,24 @@
 import styled from "styled-components";
 import { Link } from "react-router-dom";
 
+export const IconButton = styled.button`
+  background: none;
+  border: none;
+  color: #333;
+  cursor: pointer;
+  padding: 0.4rem;
+  display: flex;
+  align-items: center;
+
+  &:hover {
+    color: #0077cc;
+  }
+`;
+
+IconButton.defaultProps = {
+  as: "button",
+};
+
 export const NavbarContainer = styled.nav`
   background-color: #e3e4e2;
   padding: 1rem 10px;

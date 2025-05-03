@@ -1,5 +1,6 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
+import Cookies from "js-cookie";
 import {
   NavbarContainer,
   NavbarWrapper,
@@ -9,12 +10,20 @@ import {
   NavbarLink,
   Dropdown,
   DropdownItem,
+  IconButton,
 } from "./styledComponents";
-
 import Cart from "../Cart";
+import { FaShoppingCart, FaUserCircle } from "react-icons/fa";
 
 const Navbar = () => {
   const [isCartOpen, setCartOpen] = useState(false);
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+
+  // Check token on mount
+  useEffect(() => {
+    const token = Cookies.get("magicTreeToken");
+    setIsLoggedIn(!!token);
+  }, []);
 
   return (
     <>
@@ -91,11 +100,21 @@ const Navbar = () => {
               </Dropdown>
             </NavbarItem>
 
+            {/* Cart Icon */}
             <NavbarItem>
-              <NavbarLink as="button" onClick={() => setCartOpen(true)}>
-                Cart
-              </NavbarLink>
+              <IconButton onClick={() => setCartOpen(true)} title="Cart">
+                <FaShoppingCart size={20} />
+              </IconButton>
             </NavbarItem>
+
+            {/* Profile Icon if logged in */}
+            {isLoggedIn && (
+              <NavbarItem>
+                <IconButton as={Link} to="/profile" title="Profile">
+                  <FaUserCircle size={22} />
+                </IconButton>
+              </NavbarItem>
+            )}
           </NavbarLinks>
         </NavbarWrapper>
       </NavbarContainer>
