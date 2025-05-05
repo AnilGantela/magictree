@@ -10,10 +10,8 @@ import {
   NavbarLink,
   Dropdown,
   DropdownItem,
-  IconButton,
 } from "./styledComponents";
 import Cart from "../Cart";
-import { FaShoppingCart, FaUserCircle } from "react-icons/fa";
 
 const Navbar = () => {
   const [isCartOpen, setCartOpen] = useState(false);
@@ -38,19 +36,19 @@ const Navbar = () => {
             </NavbarItem>
 
             <NavbarItem>
-              <NavbarLink to="/security-safety">Security & Safety</NavbarLink>
+              <NavbarLink>Security & Safety</NavbarLink>
               <Dropdown>
                 <DropdownItem to="/security-safety/biometrics">
                   Biometrics
                 </DropdownItem>
-                <DropdownItem to="/security-safety/cctv">
+                <DropdownItem to="/security-safety/cctv surveillance">
                   CCTV Surveillance
                 </DropdownItem>
               </Dropdown>
             </NavbarItem>
 
             <NavbarItem>
-              <NavbarLink to="/eco-friendly">Eco Friendly</NavbarLink>
+              <NavbarLink>Eco Friendly</NavbarLink>
               <Dropdown>
                 <DropdownItem to="/eco-friendly/bags">Bags</DropdownItem>
                 <DropdownItem to="/eco-friendly/chappals">
@@ -61,7 +59,7 @@ const Navbar = () => {
             </NavbarItem>
 
             <NavbarItem>
-              <NavbarLink to="/hr-consultancy">HR Consultancy</NavbarLink>
+              <NavbarLink>HR Consultancy</NavbarLink>
               <Dropdown>
                 <DropdownItem to="/hr/internships">
                   Internships/Summer Projects
@@ -80,7 +78,7 @@ const Navbar = () => {
             </NavbarItem>
 
             <NavbarItem>
-              <NavbarLink to="/marketing">Marketing</NavbarLink>
+              <NavbarLink>Marketing</NavbarLink>
               <Dropdown>
                 <DropdownItem to="/marketing/research">
                   Market Research
@@ -100,21 +98,9 @@ const Navbar = () => {
               </Dropdown>
             </NavbarItem>
 
-            {/* Cart Icon */}
             <NavbarItem>
-              <IconButton onClick={() => setCartOpen(true)} title="Cart">
-                <FaShoppingCart size={20} />
-              </IconButton>
+              <NavbarLink to="/profile">User</NavbarLink>
             </NavbarItem>
-
-            {/* Profile Icon if logged in */}
-            {isLoggedIn && (
-              <NavbarItem>
-                <IconButton as={Link} to="/profile" title="Profile">
-                  <FaUserCircle size={22} />
-                </IconButton>
-              </NavbarItem>
-            )}
           </NavbarLinks>
         </NavbarWrapper>
       </NavbarContainer>

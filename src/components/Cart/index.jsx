@@ -15,126 +15,94 @@ import {
   ItemTitle,
   ItemPriceQuantityWrapper,
   ItemPrice,
-  QuantityText,
   TotalSection,
   TotalLabel,
   TotalValue,
   CheckoutButton,
-  QuantityButton,
 } from "./styledComponents";
 import { useNavigate } from "react-router-dom";
 
-const Cart = ({ isOpen, onClose }) => {
+const Cart = ({ isOpen, onToggle }) => {
   const [cartItems, setCartItems] = useState([]);
   const [totalPrice, setTotalPrice] = useState(0);
   const navigate = useNavigate();
 
   useEffect(() => {
-    const cart = JSON.parse(Cookies.get("cart") || "[]");
-    console.log("🧾 Cart loaded from cookies:", cart);
-    setCartItems(cart);
+    try {
+      const cart = JSON.parse(Cookies.get("cart") || "[]");
+      // Filter out null/invalid items
+      const validItems = cart.filter(
+        (item) =>
+          item &&
+          typeof item === "object" &&
+          item.image &&
+          item.name &&
+          typeof item.price === "number" &&
+          typeof item.discount === "number"
+      );
+      setCartItems(validItems);
+    } catch (err) {
+      console.error("Error parsing cart from cookies:", err);
+      setCartItems([]);
+    }
   }, [isOpen]);
 
-  const calculateTotalPrice = () => {
-    let total = 0;
-    cartItems.forEach((item) => {
-      total += item.price * item.quantity;
-    });
-    setTotalPrice(total);
-  };
-
   useEffect(() => {
-    calculateTotalPrice();
+    const total = cartItems.reduce(
+      (acc, item) => acc + (item.price - item.discount) * (item.quantity || 1),
+      0
+    );
+    setTotalPrice(total);
   }, [cartItems]);
 
   const handleCheckout = () => {
-    onClose();
+    onToggle(); // Close cart
     navigate("/checkout");
-  };
-
-  const handleRemoveItem = (productId) => {
-    const updatedCart = cartItems.filter((item) => item._id !== productId);
-    setCartItems(updatedCart);
-    Cookies.set("cart", JSON.stringify(updatedCart), { expires: 7, path: "/" });
-  };
-
-  const handleIncreaseQuantity = (productId) => {
-    const updatedCart = cartItems.map((item) =>
-      item._id === productId ? { ...item, quantity: item.quantity + 1 } : item
-    );
-    setCartItems(updatedCart);
-    Cookies.set("cart", JSON.stringify(updatedCart), { expires: 7, path: "/" });
-  };
-
-  const handleDecreaseQuantity = (productId) => {
-    const updatedCart = cartItems
-      .map((item) => {
-        if (item._id === productId) {
-          if (item.quantity > 1) {
-            return { ...item, quantity: item.quantity - 1 };
-          }
-          return null; // Remove the item
-        }
-        return item;
-      })
-      .filter(Boolean); // Remove nulls
-
-    setCartItems(updatedCart);
-    Cookies.set("cart", JSON.stringify(updatedCart), { expires: 7, path: "/" });
   };
 
   return (
     <>
-      {isOpen && <CartOverlay onClick={onClose} />}
-      <CartSidebar isOpen={isOpen}>
-        <CartHeader>
+      {isOpen && <CartOverlay onClick={onToggle} />}
+      <CartSidebar $isOpen={isOpen}>
+        <CartHeader onClick={onToggle}>
           <CartTitle>Your Cart</CartTitle>
-          <CloseButton onClick={onClose}>×</CloseButton>
+          <CloseButton>{isOpen ? "▼" : "▲"}</CloseButton>
         </CartHeader>
-        <CartContent>
-          {cartItems.length === 0 ? (
-            <EmptyCartImageWrapper>
-              <EmptyCartImage src="/noproducts.png" alt="no-products" />
-            </EmptyCartImageWrapper>
-          ) : (
-            <>
-              {cartItems.map((item) => (
-                <CartItem key={item._id || item.id}>
-                  <ItemImage src={item.image} alt={item.name} />
-                  <ItemDetails>
-                    <ItemTitle>{item.name}</ItemTitle>
-                    <ItemPriceQuantityWrapper>
-                      <ItemPrice>₹{item.price - item.discount}</ItemPrice>
-
-                      <div style={{ display: "flex", alignItems: "center" }}>
-                        <QuantityButton
-                          onClick={() => handleDecreaseQuantity(item._id)}
-                        >
-                          -
-                        </QuantityButton>
-                        <QuantityText>{item.quantity}</QuantityText>
-                        <QuantityButton
-                          onClick={() => handleIncreaseQuantity(item._id)}
-                        >
-                          +
-                        </QuantityButton>
-                      </div>
-                    </ItemPriceQuantityWrapper>
-                  </ItemDetails>
-                </CartItem>
-              ))}
-              <div>
+        {isOpen && (
+          <CartContent>
+            {cartItems.length === 0 ? (
+              <EmptyCartImageWrapper>
+                <EmptyCartImage src="/noproducts.png" alt="No products" />
+              </EmptyCartImageWrapper>
+            ) : (
+              <>
+                {cartItems.map((item) => (
+                  <CartItem key={item._id || item.id}>
+                    <ItemImage
+                      src={item.image || "/fallback-image.png"}
+                      alt={item.name || "Product image"}
+                    />
+                    <ItemDetails>
+                      <ItemTitle>{item.name}</ItemTitle>
+                      <ItemPriceQuantityWrapper>
+                        <ItemPrice>
+                          ₹{(item.price - item.discount).toFixed(2)}
+                        </ItemPrice>
+                      </ItemPriceQuantityWrapper>
+                    </ItemDetails>
+                  </CartItem>
+                ))}
                 <TotalSection>
                   <TotalLabel>Total:</TotalLabel>
-                  <TotalValue>₹{totalPrice}</TotalValue>
+                  <TotalValue>₹{totalPrice.toFixed(2)}</TotalValue>
                 </TotalSection>
                 <CheckoutButton onClick={handleCheckout}>
                   Proceed to Checkout
                 </CheckoutButton>
-              </div>
-            </>
-          )}
-        </CartContent>
+              </>
+            )}
+          </CartContent>
+        )}
       </CartSidebar>
     </>
   );

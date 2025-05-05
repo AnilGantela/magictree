@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from "react";
-import Cookies from "js-cookie";
 import {
   HomeContainer,
   Banner,
@@ -9,8 +8,11 @@ import {
   ProductImage,
   ProductTitle,
   ProductPrice,
-  AddToCartButton,
+  StrikePrice,
+  DiscountBadge,
+  AverageRating,
   PriceAndCartRow,
+  PriceAndRatingRow,
 } from "./styledComponents";
 import { Carousel } from "react-responsive-carousel";
 import { useNavigate, useLocation } from "react-router-dom";
@@ -19,7 +21,7 @@ import "react-responsive-carousel/lib/styles/carousel.min.css";
 const Home = () => {
   const [groupedProducts, setGroupedProducts] = useState({});
   const navigate = useNavigate();
-  const location = useLocation(); // get current page info
+  const location = useLocation();
 
   useEffect(() => {
     const fetchProducts = async () => {
@@ -43,41 +45,6 @@ const Home = () => {
 
     fetchProducts();
   }, []);
-
-  const handleAddToCart = (product) => {
-    // 🔐 Check for auth token
-    const token = Cookies.get("magicTreeToken");
-
-    if (!token) {
-      // ⛔ Not logged in — redirect to login with return URL
-      const currentPath = location.pathname + location.search;
-      navigate(`/login?redirect=${encodeURIComponent(currentPath)}`);
-      return;
-    }
-
-    // 🛒 Continue with cart logic
-    const existingCart = Cookies.get("cart");
-    let cart = existingCart ? JSON.parse(existingCart) : [];
-
-    const productToAdd = {
-      _id: product._id,
-      name: product.name,
-      image: product.images?.[0] || "",
-      price: product.price,
-      discount: product.discount || 0,
-      quantity: 1,
-    };
-
-    const index = cart.findIndex((item) => item._id === product._id);
-
-    if (index !== -1) {
-      cart[index].quantity += 1;
-    } else {
-      cart.push(productToAdd);
-    }
-
-    Cookies.set("cart", JSON.stringify(cart), { expires: 7, path: "/" });
-  };
 
   return (
     <HomeContainer>
@@ -105,21 +72,36 @@ const Home = () => {
         <div key={category}>
           <CategoryTitle>{category}</CategoryTitle>
           <ProductSection>
-            {products.map((product) => (
-              <ProductCard key={product._id || product.id}>
-                <ProductImage
-                  src={product.images?.[1] || product.images?.[0]}
-                  alt={product.name}
-                />
-                <ProductTitle>{product.name}</ProductTitle>
-                <PriceAndCartRow>
-                  <ProductPrice>₹{product.price}</ProductPrice>
-                  <AddToCartButton onClick={() => handleAddToCart(product)}>
-                    Add to Cart
-                  </AddToCartButton>
-                </PriceAndCartRow>
-              </ProductCard>
-            ))}
+            {products.map((product) => {
+              const discountedPrice = Math.round(
+                product.price * (1 - (product.discount || 0) / 100)
+              );
+
+              return (
+                <ProductCard
+                  key={product._id || product.id}
+                  onClick={() => navigate(`/product/${product._id}`)}
+                >
+                  {product.discount > 0 && (
+                    <DiscountBadge>-{product.discount}%</DiscountBadge>
+                  )}
+                  <ProductImage
+                    src={product.images?.[1] || product.images?.[0]}
+                    alt={product.name}
+                  />
+                  <ProductTitle>{product.name}</ProductTitle>
+                  <PriceAndRatingRow>
+                    <div>
+                      <StrikePrice>₹{product.price}</StrikePrice>
+                      <ProductPrice>₹{discountedPrice}</ProductPrice>
+                    </div>
+                    <AverageRating>
+                      ⭐ {product.averageRating || 5}
+                    </AverageRating>
+                  </PriceAndRatingRow>
+                </ProductCard>
+              );
+            })}
           </ProductSection>
         </div>
       ))}

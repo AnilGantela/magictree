@@ -1,28 +1,24 @@
 import styled from "styled-components";
 
-export const HomeContainer = styled.div`
-  width: 99%;
-  margin: 10px auto;
-`;
-
-export const Banner = styled.div`
-  width: 100%;
-  height: 400px;
-  border: 2px solid #ccc;
-
-  .carousel .slide img {
-    width: 100%;
-    height: 400px;
-    object-fit: cover;
-  }
-`;
-
-export const ProductSection = styled.div`
+export const SubcategoryContainer = styled.div`
   display: flex;
-  gap: 1rem;
-  flex-wrap: wrap;
-  padding: 0 1rem;
-  margin-top: 1rem;
+  padding: 1rem;
+`;
+
+export const SortButton = styled.button`
+  padding: 8px 12px;
+  font-size: 15px;
+  border-radius: 6px;
+  border: 1px solid ${({ selected }) => (selected ? "#007bff" : "#ccc")};
+  background-color: ${({ selected }) => (selected ? "#007bff" : "#fff")};
+  color: ${({ selected }) => (selected ? "#fff" : "#333")};
+  cursor: pointer;
+  transition: all 0.2s;
+
+  &:hover {
+    background-color: ${({ selected }) =>
+      selected ? "#0056b3" : "rgba(0, 0, 0, 0.05)"};
+  }
 `;
 
 export const PriceAndRatingRow = styled.div`
@@ -105,8 +101,58 @@ export const StrikePrice = styled.span`
   margin-right: 6px;
 `;
 
-export const CategoryTitle = styled.h2`
-  font-size: 24px;
-  margin: 20px 0 10px 10px;
-  color: #fff;
+export const Sidebar = styled.aside`
+  width: 220px;
+  padding: 1rem;
+  border-right: 1px solid #ddd;
+`;
+
+export const FilterTitle = styled.h3`
+  font-size: 18px;
+  margin-bottom: 1rem;
+`;
+
+export const ContentArea = styled.div`
+  flex: 1;
+  padding: 1rem;
+`;
+
+export const Banner = styled.div`
+  margin-bottom: 2rem;
+  img {
+    max-height: 300px;
+    object-fit: cover;
+  }
+`;
+
+export const ProductsGrid = styled.div`
+  width: 100%;
+  border: 1px solid #ddd;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+  gap: 1.5rem;
+`;
+export const EmptyCartImageWrapper = styled.div`
+  display: flex;
+  flex-grow: 1;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+  width: 100%;
+  border: 1px solid #ddd;
+`;
+
+export const EmptyCartImage = styled.img`
+  max-width: 150px;
+  max-height: 150px;
+`;
+export const FilterSelect = styled.select`
+  width: 100%;
+  padding: 8px;
+  margin-top: 10px;
+  font-size: 16px;
+  border-radius: 8px;
+  border: 1px solid #ccc;
+  background: white;
+  cursor: pointer;
 `;
