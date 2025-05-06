@@ -1,20 +1,30 @@
-import styled from "styled-components";
+import styled, { keyframes } from "styled-components";
+
+const slideIn = keyframes`
+  0% {
+    transform: translateX(100%);
+    opacity: 0;
+  }
+  50% {
+    transform: translateX(-10%);
+    opacity: 0.5;
+  }
+  100% {
+    transform: translateX(0);
+    opacity: 1;
+  }
+`;
 
 export const Container = styled.div`
-  padding: 20px;
-  background: linear-gradient(to right, #fffbe6, #e6fff2);
+  padding: 10px;
   font-family: "Inter", sans-serif;
 `;
 
 export const ProductContainer = styled.div`
   display: flex;
-  flex-wrap: wrap;
-  gap: 40px;
-  background: #fff;
-  padding: 30px;
-  border-radius: 16px;
-  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1);
-
+  flex-direction: row;
+  justify-content: space-between;
+  padding: 10px;
   @media (max-width: 768px) {
     flex-direction: column;
   }
@@ -23,19 +33,36 @@ export const ProductContainer = styled.div`
 export const ImagesSection = styled.div`
   flex: 1 1 40%;
   min-width: 300px;
+  max-width: 49%;
+  display: flex;
+  justify-content: space-around;
+  border: 2px solid #ccc;
+  height: 50vh;
+  padding: 10px;
+  border: 2px solid red;
+  background-color: #ffffff;
 `;
 
 export const MainImage = styled.img`
-  width: 100%;
+  width: 80%;
   border-radius: 12px;
-  border: 2px solid #565656;
+  height: 100%;
+  object-fit: contain;
+  &.slide {
+    animation: ${slideIn} 0.5s ease;
+  }
 `;
 
 export const ThumbnailRow = styled.div`
   display: flex;
+  flex-direction: column;
   gap: 12px;
-  margin-top: 12px;
-  flex-wrap: wrap;
+  justify-content: flex-start;
+  align-items: center;
+  height: 100%; /* or any desired height */
+  width: 80px; /* fixed width is better than max-width for vertical bars */
+  overflow-y: auto;
+  overflow-x: hidden; /* prevent horizontal scroll */
 `;
 
 export const Thumbnail = styled.img`
@@ -53,19 +80,24 @@ export const Thumbnail = styled.img`
 `;
 
 export const DetailsSection = styled.div`
-  flex: 1 1 55%;
   padding: 25px;
-  border-radius: 12px;
-  background-color: #fffdd0;
+  width: 48%;
   text-align: left;
   box-shadow: 0 6px 10px rgba(0, 0, 0, 0.1);
+  border: 2px solid red;
 `;
 
 export const ProductName = styled.div`
   font-size: 32px;
   font-weight: 700;
   margin-bottom: 12px;
-  color: #0011a8;
+  color: #fff;
+  width: 100%;
+  display: -webkit-box;
+  -webkit-line-clamp: 2; /* Limit to 2 lines */
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
 `;
 
 export const TextLine = styled.div`

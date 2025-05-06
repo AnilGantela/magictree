@@ -163,3 +163,15 @@ export const CheckoutButton = styled.button`
     background-color: #218838;
   }
 `;
+export const RemoveButton = styled.button`
+  background: transparent;
+  border: none;
+  color: #888;
+  cursor: pointer;
+  margin-left: auto;
+  padding: 4px;
+
+  &:hover {
+    color: red;
+  }
+`;

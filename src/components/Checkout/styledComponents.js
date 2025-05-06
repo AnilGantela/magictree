@@ -2,104 +2,142 @@ import styled from "styled-components";
 import { Link } from "react-router-dom";
 
 export const CheckoutContainer = styled.div`
-  height: 91vh;
-  width: 100%;
   padding: 20px;
-  box-sizing: border-box;
-  background-color: #fdfdfd;
-  font-family: "Segoe UI", sans-serif;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  overflow-y: auto;
+  max-width: 800px;
+  margin: 0 auto;
 `;
 
+// Section title for Cart Items, Deliver To, and Summary
 export const SectionTitle = styled.h2`
-  margin-top: 24px;
-  font-size: 1.3rem;
+  font-size: 1.5em;
+  margin-bottom: 10px;
   color: #333;
-  width: 100%;
-  max-width: 600px;
 `;
 
-export const CartList = styled.ul`
-  list-style: none;
+// List of cart items (products)
+export const CartList = styled.div`
+  list-style-type: none;
   padding: 0;
-  width: 100%;
-  max-width: 600px;
+  margin: 0;
 `;
 
-export const CartItem = styled.li`
-  margin-bottom: 8px;
-  font-size: 1rem;
+// Cart item, can be used to display individual product info
+export const CartItem = styled.div`
+  background-color: #f9f9f9;
+  padding: 15px;
+  margin: 10px 0;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  cursor: pointer;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 `;
 
-export const AddressInput = styled.textarea`
+// Address input fields
+export const AddressInput = styled.input`
   width: 100%;
-  max-width: 600px;
-  height: 80px;
   padding: 10px;
-  font-size: 1rem;
-  border-radius: 6px;
+  margin-bottom: 10px;
   border: 1px solid #ccc;
-  resize: vertical;
-  box-sizing: border-box;
+  border-radius: 5px;
 `;
 
+// Summary text for discount, total, and delivery date
 export const SummaryText = styled.p`
-  margin: 8px 0;
-  font-size: 1rem;
-  color: #444;
-  width: 100%;
-  max-width: 600px;
+  font-size: 1.1em;
+  margin-bottom: 10px;
 `;
 
-export const BackToHomeLink = styled(Link)`
-  align-self: flex-start;
-  margin-bottom: 20px;
-  font-size: 1rem;
-  color: #0077cc;
-  text-decoration: none;
-  font-weight: 500;
-
-  &:hover {
-    text-decoration: underline;
-    color: #005fa3;
-  }
-`;
-
+// Group for action buttons (Back and Pay Now)
 export const ButtonGroup = styled.div`
   display: flex;
   justify-content: space-between;
-  margin-top: 24px;
-  width: 100%;
-  max-width: 600px;
+  margin-top: 20px;
 `;
 
+// Back button style
 export const BackButton = styled.button`
   padding: 10px 20px;
-  background-color: #ccc;
-  color: #333;
-  font-weight: bold;
-  border: none;
-  border-radius: 6px;
+  background-color: #f0f0f0;
+  border: 1px solid #ccc;
+  border-radius: 5px;
   cursor: pointer;
-
   &:hover {
-    background-color: #bbb;
+    background-color: #ddd;
   }
 `;
 
+// Pay Now button style
 export const PayButton = styled.button`
   padding: 10px 20px;
-  background-color: #ff671f;
-  color: #fff;
-  font-weight: bold;
+  background-color: #4caf50;
+  color: white;
   border: none;
-  border-radius: 6px;
+  border-radius: 5px;
   cursor: pointer;
-
   &:hover {
-    background-color: #e55d1b;
+    background-color: #45a049;
   }
+`;
+
+// Style for the "Add Address" button
+export const AddAddressButton = styled.button`
+  padding: 10px 20px;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  margin-top: 20px;
+  &:hover {
+    background-color: #0056b3;
+  }
+`;
+
+// Container for the address form when adding a new address
+export const AddressFormContainer = styled.div`
+  margin-top: 20px;
+  background-color: #f9f9f9;
+  padding: 20px;
+  border-radius: 5px;
+  border: 1px solid #ddd;
+`;
+
+// Input fields for the address form
+export const AddressFormInput = styled.input`
+  width: 100%;
+  padding: 10px;
+  margin-bottom: 10px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+`;
+
+// Style for address items in the list
+export const AddressItem = styled.div`
+  display: flex;
+  flex-direction: column;
+  padding: 10px;
+  margin: 10px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  width: 300px;
+  cursor: pointer;
+  transition: border 0.3s;
+  &:hover {
+    border: 1px solid #007bff;
+  }
+`;
+
+// Style for the radio button to select address
+export const RadioInput = styled.input`
+  margin-right: 10px;
+`;
+
+// Styling for displaying address in a letter-like format
+export const AddressLetterFormat = styled.p`
+  font-size: 1em;
+  margin: 5px 0;
+  line-height: 1.5;
+  color: #333;
 `;
