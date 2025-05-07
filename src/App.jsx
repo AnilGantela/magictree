@@ -12,6 +12,7 @@ import Cart from "./components/Cart";
 import Subcategory from "./components/SubCategory";
 import Product from "./components/Product";
 import PaymentPage from "./components/Payment";
+import Footer from "./components/Footer";
 
 function App() {
   const [isCartOpen, setIsCartOpen] = useState(false);
@@ -36,6 +37,7 @@ function App() {
           <Route path="*" element={<PageNotFound />} />
         </Routes>
       </div>
+      <Footer />
     </>
   );
 }

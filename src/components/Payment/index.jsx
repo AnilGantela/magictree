@@ -40,7 +40,6 @@ const PaymentPage = () => {
           );
           console.log(verifyRes.data);
           if (verifyRes.data.success) {
-            alert("Payment successful!");
             navigate("/orders"); // Navigate to orders page on success
           } else {
             alert("Payment verification failed.");

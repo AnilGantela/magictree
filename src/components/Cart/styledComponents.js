@@ -32,7 +32,7 @@ export const CartHeader = styled.div`
   display: flex;
   justify-content: space-between;
   align-items: center;
-  background-color: green;
+  background-color: #06038d;
   padding: 0px 20px;
   color: white;
   height: 50px;

@@ -2,7 +2,28 @@ import styled from "styled-components";
 import { Link } from "react-router-dom";
 
 export const NavbarContainer = styled.nav`
-  background-color: #e3e4e2;
+  background: hsla(20, 100%, 22%, 1);
+
+  background: linear-gradient(
+    to right,
+    hsla(20, 100%, 22%, 1) 0%,
+    hsla(19, 100%, 56%, 1) 100%
+  );
+
+  background: -moz-linear-gradient(
+    left,
+    hsla(20, 100%, 22%, 1) 0%,
+    hsla(19, 100%, 56%, 1) 100%
+  );
+
+  background: -webkit-linear-gradient(
+    left,
+    hsla(20, 100%, 22%, 1) 0%,
+    hsla(19, 100%, 56%, 1) 100%
+  );
+
+  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr="#712600", endColorstr="#FF671F", GradientType=1);
+
   padding: 1rem 10px;
   position: fixed;
   top: 0;
@@ -43,10 +64,10 @@ export const NavbarItem = styled.li`
 `;
 
 export const NavbarLink = styled(Link)`
-  color: #046a38;
+  color: #fff;
   text-decoration: none;
   font-size: 1rem;
-  font-weight: 500;
+  font-weight: 700;
   letter-spacing: 1px;
   transition: all 0.3s ease;
   position: relative;

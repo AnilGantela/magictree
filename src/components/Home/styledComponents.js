@@ -108,5 +108,5 @@ export const StrikePrice = styled.span`
 export const CategoryTitle = styled.h2`
   font-size: 24px;
   margin: 20px 0 10px 10px;
-  color: #fff;
+  color: #06038d;
 `;
