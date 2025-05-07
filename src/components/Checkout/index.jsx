@@ -46,6 +46,9 @@ const Checkout = () => {
   const token = Cookies.get("magicTreeToken");
 
   useEffect(() => {
+    if (!token) {
+      navigate("/login");
+    }
     const fetchProduct = async () => {
       try {
         const res = await axios.get(
