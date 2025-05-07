@@ -30,6 +30,7 @@ function App() {
           <Route path="/product/:id" element={<Product />} />
           <Route path="/" element={<Home />} />
           <Route path="/checkout" element={<Checkout />} />
+          <Route path="/checkout/:productId" element={<Checkout />} />
           <Route path="*" element={<PageNotFound />} />
         </Routes>
       </div>

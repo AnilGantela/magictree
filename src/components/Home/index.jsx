@@ -92,7 +92,9 @@ const Home = () => {
                   <ProductTitle>{product.name}</ProductTitle>
                   <PriceAndRatingRow>
                     <div>
-                      <StrikePrice>₹{product.price}</StrikePrice>
+                      {product.discount > 0 && (
+                        <StrikePrice>₹{product.price}</StrikePrice>
+                      )}
                       <ProductPrice>₹{discountedPrice}</ProductPrice>
                     </div>
                     <AverageRating>

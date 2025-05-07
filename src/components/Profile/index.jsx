@@ -27,7 +27,7 @@ const Profile = () => {
     const fetchUser = async () => {
       try {
         const response = await fetch(
-          "https://magictreebackend.onrender.com/user/",
+          "https://magictreebackend.onrender.com/user/me",
           {
             headers: {
               Authorization: `Bearer ${token}`,
@@ -38,6 +38,7 @@ const Profile = () => {
         if (!response.ok) throw new Error("Failed to fetch user");
 
         const data = await response.json();
+        console.log(data);
         setUser(data);
       } catch (err) {
         console.error(err.message);

@@ -125,15 +125,7 @@ const ProductPage = () => {
   };
 
   const handleBuyNow = () => {
-    const buyNowProduct = {
-      _id: product._id,
-      name: product.name,
-      price: product.price,
-      discount: product.discount,
-      image: product.images[0],
-      quantity: 1,
-    };
-    navigate("/checkout", { state: { product: buyNowProduct } });
+    navigate(`/checkout/${product._id}`);
   };
 
   if (loading) return <Container>Loading...</Container>;
