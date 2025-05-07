@@ -75,7 +75,7 @@ export const ProductTitle = styled.h4`
   -webkit-box-orient: vertical;
   overflow: hidden;
   text-overflow: ellipsis;
-  min-height: 2.8em;
+  min-height: 2.7em;
 `;
 
 export const AverageRating = styled.div`
