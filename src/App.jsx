@@ -11,6 +11,7 @@ import Navbar from "./components/Navbar";
 import Cart from "./components/Cart";
 import Subcategory from "./components/SubCategory";
 import Product from "./components/Product";
+import PaymentPage from "./components/Payment";
 
 function App() {
   const [isCartOpen, setIsCartOpen] = useState(false);
@@ -31,6 +32,7 @@ function App() {
           <Route path="/" element={<Home />} />
           <Route path="/checkout" element={<Checkout />} />
           <Route path="/checkout/:productId" element={<Checkout />} />
+          <Route path="/payment" element={<PaymentPage />} />
           <Route path="*" element={<PageNotFound />} />
         </Routes>
       </div>

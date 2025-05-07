@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useCallback } from "react";
 import { useLocation, useNavigate, useParams } from "react-router-dom";
 import axios from "axios";
 import Cookies from "js-cookie";
@@ -21,13 +21,16 @@ const Checkout = () => {
   const location = useLocation();
   const navigate = useNavigate();
   const { productId } = useParams();
+
   const [cartItems, setCartItems] = useState([]);
   const [addresses, setAddresses] = useState([]);
   const [selectedAddressIndex, setSelectedAddressIndex] = useState(null);
   const [name, setName] = useState("");
   const [phone, setPhone] = useState("");
-  const [paymentMethod, setPaymentMethod] = useState("Cash on Delivery"); // ✅ new state
+  const [paymentMethod, setPaymentMethod] = useState("Cash on Delivery");
   const [showAddAddressForm, setShowAddAddressForm] = useState(false);
+  const [isSingleProduct, setIsSingleProduct] = useState(false);
+
   const [newAddress, setNewAddress] = useState({
     street: "",
     city: "",
@@ -35,6 +38,7 @@ const Checkout = () => {
     zip: "",
     country: "",
   });
+  const [loading, setLoading] = useState(false);
 
   const discount = 50;
   const deliveryDate = new Date();
@@ -42,48 +46,36 @@ const Checkout = () => {
   const token = Cookies.get("magicTreeToken");
 
   useEffect(() => {
+    const fetchProduct = async () => {
+      try {
+        const res = await axios.get(
+          `https://magictreebackend.onrender.com/products/${productId}`
+        );
+        setCartItems([{ ...res.data.product, quantity: 1 }]);
+        setIsSingleProduct(true);
+      } catch (err) {
+        console.error("Failed to fetch product:", err);
+      }
+    };
+
+    const fetchCartItems = async () => {
+      try {
+        const res = await axios.get(
+          "https://magictreebackend.onrender.com/cart/items",
+          { headers: { Authorization: `Bearer ${token}` } }
+        );
+        console.log(res.data.items);
+        setCartItems(res.data.items || []);
+        setIsSingleProduct(false);
+      } catch (err) {
+        console.error("Failed to fetch cart items:", err);
+      }
+    };
+
     if (productId) {
-      const fetchProduct = async () => {
-        try {
-          const res = await axios.get(
-            `https://magictreebackend.onrender.com/products/${productId}`
-          );
-          setCartItems([{ ...res.data.product, quantity: 1 }]);
-        } catch (err) {
-          console.error("Failed to fetch product:", err);
-        }
-      };
       fetchProduct();
     } else {
-      const fetchCartItems = async () => {
-        try {
-          const res = await axios.get(
-            "https://magictreebackend.onrender.com/cart/items",
-            { headers: { Authorization: `Bearer ${token}` } }
-          );
-          if (res.data && res.data.items) {
-            setCartItems(res.data.items);
-          }
-        } catch (err) {
-          console.error("Failed to fetch cart items:", err);
-        }
-      };
-
-      if (location.state?.cartItems) {
-        setCartItems(location.state.cartItems);
-      } else {
-        const cartCookie = Cookies.get("cart");
-        if (cartCookie) {
-          try {
-            const parsedCart = JSON.parse(cartCookie);
-            setCartItems(parsedCart);
-          } catch (err) {
-            console.error("Error parsing cart:", err);
-          }
-        } else {
-          fetchCartItems();
-        }
-      }
+      fetchCartItems();
     }
 
     const fetchAddresses = async () => {
@@ -109,71 +101,86 @@ const Checkout = () => {
       0
     ) - discount;
 
-  const handlePayNow = async () => {
+  const handlePayNow = useCallback(async () => {
     if (!name || !phone || selectedAddressIndex === null) {
       alert("Please complete name, phone, and address selection.");
       return;
     }
 
-    const selectedAddress = addresses[selectedAddressIndex];
+    const selectedAddressObj = addresses[selectedAddressIndex];
+    const shippingAddressString = `${selectedAddressObj.street}, ${selectedAddressObj.city}, ${selectedAddressObj.state}, ${selectedAddressObj.zip}, ${selectedAddressObj.country}`;
+
+    const orderProducts = cartItems.map((item) => ({
+      product: isSingleProduct ? item._id : item.productId,
+      quantity: item.quantity,
+      price: item.price - (item.discount || 0),
+    }));
 
     try {
-      const response = await axios.post(
+      setLoading(true);
+      const orderBody = {
+        products: orderProducts,
+        shippingAddress: shippingAddressString,
+        shippingName: name,
+        phoneNumber: phone,
+        paymentMethod: paymentMethod,
+      };
+
+      console.log("Order body before sending:", orderBody);
+      const orderRes = await axios.post(
         "https://magictreebackend.onrender.com/order/create",
         {
-          products: cartItems,
-          shippingAddress: selectedAddress,
+          products: orderProducts,
+          shippingAddress: shippingAddressString,
           shippingName: name,
           phoneNumber: phone,
+          paymentMethod: paymentMethod,
         },
         { headers: { Authorization: `Bearer ${token}` } }
       );
 
-      const { razorpayOrderId, razorpayKeyId, amount, currency } =
-        response.data;
+      if (paymentMethod === "Cash on Delivery") {
+        alert("Order placed with Cash on Delivery!");
+        navigate("/orders");
+        return;
+      }
 
-      const options = {
-        key: razorpayKeyId,
-        amount: amount.toString(),
-        currency: currency,
-        name: "Magic Tree",
-        description: "Order Payment",
-        order_id: razorpayOrderId,
-        handler: async function (response) {
-          // Verify payment on the server
-          const verifyResponse = await axios.post(
-            "https://magictreebackend.onrender.com/payment/verify",
-            {
-              razorpayOrderId: response.razorpay_order_id,
-              razorpayPaymentId: response.razorpay_payment_id,
-              razorpaySignature: response.razorpay_signature,
-            },
-            { headers: { Authorization: `Bearer ${token}` } }
-          );
+      if (paymentMethod === "Online payment") {
+        if (!window.Razorpay) {
+          alert("Razorpay SDK not loaded. Please refresh page.");
+          return;
+        }
 
-          if (verifyResponse.data.success) {
-            alert("Payment successful!");
-            navigate("/orders");
-          } else {
-            alert("Payment verification failed.");
-          }
-        },
-        prefill: {
-          name: name,
-          contact: phone,
-        },
-        theme: {
-          color: "#3399cc",
-        },
-      };
+        const { razorpayOrderId, razorpayKeyId, amount, currency } =
+          orderRes.data;
 
-      const rzp = new window.Razorpay(options);
-      rzp.open();
+        navigate("/payment", {
+          state: {
+            razorpayOrderId,
+            razorpayKeyId,
+            amount,
+            name,
+            phone,
+            currency,
+          },
+        });
+      }
     } catch (err) {
       console.error("Order creation failed:", err);
       alert("Failed to place order.");
+    } finally {
+      setLoading(false);
     }
-  };
+  }, [
+    name,
+    phone,
+    selectedAddressIndex,
+    addresses,
+    cartItems,
+    paymentMethod,
+    token,
+    navigate,
+  ]);
 
   const handleAddAddress = async () => {
     try {
@@ -184,7 +191,13 @@ const Checkout = () => {
       );
       setAddresses([...addresses, res.data]);
       setShowAddAddressForm(false);
-      setNewAddress({ street: "", city: "", state: "", zip: "", country: "" });
+      setNewAddress({
+        street: "",
+        city: "",
+        state: "",
+        zip: "",
+        country: "",
+      });
     } catch (err) {
       console.error("Error adding address:", err);
       alert("Failed to add address.");
@@ -194,7 +207,6 @@ const Checkout = () => {
   return (
     <CheckoutContainer>
       <h1>Checkout</h1>
-
       <SectionTitle>Cart Items</SectionTitle>
       <CartList>
         {cartItems.length > 0 ? (
@@ -208,7 +220,6 @@ const Checkout = () => {
           <CartItem>No items in cart.</CartItem>
         )}
       </CartList>
-
       <SectionTitle>Deliver To</SectionTitle>
       <AddressInput
         value={name}
@@ -221,7 +232,6 @@ const Checkout = () => {
         placeholder="Phone Number"
         type="tel"
       />
-
       <SectionTitle>Select Address</SectionTitle>
       <CartList style={{ display: "flex", flexWrap: "wrap" }}>
         {addresses.length > 0 ? (
@@ -262,51 +272,75 @@ const Checkout = () => {
           <CartItem>No saved addresses found.</CartItem>
         )}
       </CartList>
-
       {showAddAddressForm && (
         <AddressFormContainer>
-          {["street", "city", "state", "zip", "country"].map((field) => (
-            <AddressFormInput
-              key={field}
-              value={newAddress[field]}
-              onChange={(e) =>
-                setNewAddress({ ...newAddress, [field]: e.target.value })
-              }
-              placeholder={field.charAt(0).toUpperCase() + field.slice(1)}
-            />
-          ))}
+          <AddressFormInput
+            placeholder="Street"
+            value={newAddress.street}
+            onChange={(e) =>
+              setNewAddress({ ...newAddress, street: e.target.value })
+            }
+          />
+          <AddressFormInput
+            placeholder="City"
+            value={newAddress.city}
+            onChange={(e) =>
+              setNewAddress({ ...newAddress, city: e.target.value })
+            }
+          />
+          <AddressFormInput
+            placeholder="State"
+            value={newAddress.state}
+            onChange={(e) =>
+              setNewAddress({ ...newAddress, state: e.target.value })
+            }
+          />
+          <AddressFormInput
+            placeholder="ZIP Code"
+            value={newAddress.zip}
+            onChange={(e) =>
+              setNewAddress({ ...newAddress, zip: e.target.value })
+            }
+          />
+          <AddressFormInput
+            placeholder="Country"
+            value={newAddress.country}
+            onChange={(e) =>
+              setNewAddress({ ...newAddress, country: e.target.value })
+            }
+          />
           <button onClick={handleAddAddress}>Add Address</button>
         </AddressFormContainer>
       )}
-
-      {!showAddAddressForm && (
-        <AddAddressButton onClick={() => setShowAddAddressForm(true)}>
-          Add New Address
-        </AddAddressButton>
-      )}
-
+      {/* Payment Method Selection */}
       <SectionTitle>Payment Method</SectionTitle>
-      <select
-        value={paymentMethod}
-        onChange={(e) => setPaymentMethod(e.target.value)}
-        style={{ padding: "10px", marginBottom: "20px", width: "100%" }}
-      >
-        <option value="Cash on Delivery">Cash on Delivery</option>
-        <option value="UPI">UPI</option>
-        <option value="Credit Card">Credit Card</option>
-        <option value="PayPal">PayPal</option>
-      </select>
-
-      <SectionTitle>Summary</SectionTitle>
-      <SummaryText>Discount: ₹{discount}</SummaryText>
-      <SummaryText>Total Amount: ₹{calculateTotal()}</SummaryText>
-      <SummaryText>
-        Expected Delivery Date: {deliveryDate.toDateString()}
-      </SummaryText>
-
+      <div>
+        <label>
+          <input
+            type="radio"
+            name="paymentMethod"
+            value="Cash on Delivery"
+            checked={paymentMethod === "Cash on Delivery"}
+            onChange={() => setPaymentMethod("Cash on Delivery")}
+          />
+          Cash on Delivery
+        </label>
+        <label>
+          <input
+            type="radio"
+            name="paymentMethod"
+            value="Online payment"
+            checked={paymentMethod === "Online payment"}
+            onChange={() => setPaymentMethod("Online payment")}
+          />
+          Pay Now
+        </label>
+      </div>
       <ButtonGroup>
-        <BackButton onClick={() => navigate(-1)}>Back</BackButton>
-        <PayButton onClick={handlePayNow}>Place Order</PayButton>
+        <BackButton onClick={() => navigate("/cart")}>Back to Cart</BackButton>
+        <PayButton onClick={handlePayNow} disabled={loading}>
+          {loading ? "Processing..." : "Pay Now"}
+        </PayButton>
       </ButtonGroup>
     </CheckoutContainer>
   );
