@@ -52,7 +52,7 @@ const PaymentPage = () => {
         }
       },
       prefill: { name, contact: phone },
-      theme: { color: "#3399cc" },
+      theme: { color: "#06038d" },
     };
 
     const rzp = new window.Razorpay(options);
@@ -77,15 +77,13 @@ const PaymentPage = () => {
     <div
       style={{
         width: "100vw",
-        height: "100vh",
+        height: "90vh",
         display: "flex",
         justifyContent: "center",
         alignItems: "center",
-        backgroundColor: "#f8f8f8",
+        backgroundColor: "#06038d",
       }}
-    >
-      <h1>Processing payment...</h1>
-    </div>
+    ></div>
   );
 };
 
