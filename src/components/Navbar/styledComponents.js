@@ -122,3 +122,16 @@ export const DropdownItem = styled(Link)`
     color: #046a38;
   }
 `;
+
+export const ExternalDropdownItem = styled.a`
+  display: block;
+  padding: 0.5rem 1rem;
+  color: #333;
+  text-decoration: none;
+  font-size: 0.95rem;
+
+  &:hover {
+    background-color: #f5f5f5;
+    color: #046a38;
+  }
+`;

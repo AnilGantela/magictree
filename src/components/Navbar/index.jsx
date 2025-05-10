@@ -10,6 +10,7 @@ import {
   NavbarLink,
   Dropdown,
   DropdownItem,
+  ExternalDropdownItem,
 } from "./styledComponents";
 import Cart from "../Cart";
 
@@ -61,9 +62,14 @@ const Navbar = () => {
             <NavbarItem>
               <NavbarLink>HR Consultancy</NavbarLink>
               <Dropdown>
-                <DropdownItem to="/hr/internships">
+                <ExternalDropdownItem
+                  href="https://internshala.com/"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
                   Internships/Summer Projects
-                </DropdownItem>
+                </ExternalDropdownItem>
+
                 <DropdownItem to="/hr/planning">
                   Man Power Planning
                 </DropdownItem>
@@ -71,9 +77,13 @@ const Navbar = () => {
                 <DropdownItem to="/hr/appraisal">
                   Appraisal Systems
                 </DropdownItem>
-                <DropdownItem to="/hr/recruitment">
+                <ExternalDropdownItem
+                  href="https://www.zoho.com/recruit/supported-job-boards.html"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
                   Recruitment/Placements
-                </DropdownItem>
+                </ExternalDropdownItem>
               </Dropdown>
             </NavbarItem>
 
