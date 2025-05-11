@@ -23,6 +23,7 @@ export const ProductSection = styled.div`
   flex-wrap: wrap;
   padding: 0 1rem;
   margin-top: 1rem;
+  margin-bottom: 2rem;
 `;
 
 export const PriceAndRatingRow = styled.div`

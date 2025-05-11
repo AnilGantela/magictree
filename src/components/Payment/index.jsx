@@ -11,7 +11,20 @@ const PaymentPage = () => {
   const token = Cookies.get("magicTreeToken");
   // Check if the required properties are missing
   if (!razorpayOrderId || !amount || !razorpayKeyId) {
-    return <div>Error: Missing payment details.</div>;
+    return (
+      <div
+        style={{
+          width: "100vw",
+          height: "91vh",
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+          backgroundColor: "#fff",
+        }}
+      >
+        Error: Missing payment details.
+      </div>
+    );
   }
 
   useEffect(() => {
@@ -40,7 +53,7 @@ const PaymentPage = () => {
           );
           console.log(verifyRes.data);
           if (verifyRes.data.success) {
-            navigate("/orders"); // Navigate to orders page on success
+            navigate("/profile/orders"); // Navigate to orders page on success
           } else {
             alert("Payment verification failed.");
             navigate(-1); // Go back to previous page if verification fails
@@ -77,13 +90,15 @@ const PaymentPage = () => {
     <div
       style={{
         width: "100vw",
-        height: "90vh",
+        height: "91vh",
         display: "flex",
         justifyContent: "center",
         alignItems: "center",
-        backgroundColor: "#06038d",
+        backgroundColor: "#fff",
       }}
-    ></div>
+    >
+      <h1>Processing Payment</h1>
+    </div>
   );
 };
 

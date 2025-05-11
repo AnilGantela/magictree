@@ -13,6 +13,9 @@ import Subcategory from "./components/SubCategory";
 import Product from "./components/Product";
 import PaymentPage from "./components/Payment";
 import Footer from "./components/Footer";
+import UserDetails from "./components/Profile/Userdetails";
+import Orders from "./components/Profile/Orders";
+import PurchasedProducts from "./components/Profile/PurchasedProducts";
 
 function App() {
   const [isCartOpen, setIsCartOpen] = useState(false);
@@ -25,9 +28,14 @@ function App() {
       <Cart isOpen={isCartOpen} onToggle={toggleCart} />
       <div style={{ paddingTop: "9vh" }}>
         <Routes>
+          <Route path="/profile" element={<Profile />}>
+            <Route path="user" element={<UserDetails />} />
+            <Route path="orders" element={<Orders />} />
+            <Route path="products" element={<PurchasedProducts />} />
+          </Route>
           <Route path="/login" element={<Login />} />
           <Route path="/signup" element={<SignUp />} />
-          <Route path="/profile" element={<Profile />} />
+
           <Route path="/:mainCategory/:subcategory" element={<Subcategory />} />
           <Route path="/product/:id" element={<Product />} />
           <Route path="/" element={<Home />} />

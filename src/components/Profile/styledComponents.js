@@ -1,19 +1,52 @@
 import styled from "styled-components";
 
-export const ProfileContainer = styled.div`
+export const Container = styled.div`
   display: flex;
-  justify-content: center;
-  padding: 2rem;
+  height: 91vh;
   background-color: #f9f9f9;
 `;
 
-export const ProfileCard = styled.div`
-  background: white;
-  padding: 2rem;
-  border-radius: 12px;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
-  width: 100%;
-  max-width: 600px;
+export const Sidebar = styled.div`
+  width: 250px;
+  background: #06038d;
+  padding: 2rem 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+`;
+
+export const SidebarOption = styled.button`
+  background: ${({ active }) => (active ? "#457b9d" : "transparent")};
+  color: white;
+  border: none;
+  text-align: left;
+  padding: 0.75rem 1rem;
+  border-radius: 6px;
+  font-size: 1rem;
+  cursor: pointer;
+  &:hover {
+    background: #457b9d;
+  }
+`;
+
+export const MainContent = styled.div`
+  flex-grow: 1;
+  background-color: #fff;
+  padding: 0 1.5rem;
+  height: 90vh;
+  overflow-y: scroll;
+
+  /* Hide scrollbar for Webkit (Chrome, Safari) */
+  &::-webkit-scrollbar {
+    width: 0;
+    height: 0;
+  }
+
+  /* Hide scrollbar for Firefox */
+  scrollbar-width: none;
+
+  /* Hide scrollbar for IE, Edge */
+  -ms-overflow-style: none;
 `;
 
 export const Title = styled.h2`
@@ -35,22 +68,15 @@ export const Value = styled.span`
   color: #444;
 `;
 
-export const AddressBlock = styled.div`
-  background: #f0f0f0;
-  padding: 0.75rem;
-  margin: 0.5rem 0;
-  border-radius: 6px;
-`;
-
 export const LogoutButton = styled.button`
   background: #e63946;
   color: white;
   border: none;
-  padding: 0.75rem 1.5rem;
+  padding: 0.75rem 1rem;
   font-size: 1rem;
-  border-radius: 8px;
+  border-radius: 6px;
+  margin-top: auto;
   cursor: pointer;
-  margin-top: 2rem;
   &:hover {
     background: #d62828;
   }

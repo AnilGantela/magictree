@@ -116,7 +116,7 @@ const Checkout = () => {
     const orderProducts = cartItems.map((item) => ({
       product: isSingleProduct ? item._id : item.productId,
       quantity: item.quantity,
-      price: item.price - (item.discount || 0),
+      price: Math.ceil(item.price - (item.discount || 0)),
     }));
 
     try {
@@ -144,7 +144,7 @@ const Checkout = () => {
 
       if (paymentMethod === "Cash on Delivery") {
         alert("Order placed with Cash on Delivery!");
-        navigate("/orders");
+        navigate("/profile/orders");
         return;
       }
 
