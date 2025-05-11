@@ -74,7 +74,15 @@ const Footer = () => {
               style={{ color: "white", textDecoration: "none" }}
             >
               <FaPhoneAlt style={{ marginRight: "8px" }} />
-              7013166557
+              +91 7013166557
+            </a>
+            <br />
+            <a
+              href="tel:+917013670892"
+              style={{ color: "white", textDecoration: "none" }}
+            >
+              <FaPhoneAlt style={{ marginRight: "8px" }} />
+              +91 7013670892
             </a>
             <br />
             <a
@@ -83,6 +91,14 @@ const Footer = () => {
             >
               <FaEnvelope style={{ marginRight: "8px" }} />
               info@magictree.in
+            </a>
+            <br />
+            <a
+              href="mailto:kolavennuc@gmail.com"
+              style={{ color: "white", textDecoration: "none" }}
+            >
+              <FaEnvelope style={{ marginRight: "8px" }} />
+              kolavennuc@gmail.com
             </a>
             <br />
             MAGIC TREE INFO SOLUTIONS PVT. LTD

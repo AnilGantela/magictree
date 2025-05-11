@@ -33,6 +33,7 @@ function App() {
           <Route path="/" element={<Home />} />
           <Route path="/checkout" element={<Checkout />} />
           <Route path="/checkout/:productId" element={<Checkout />} />
+          <Route path="/industrial" element={<Subcategory />} />
           <Route path="/payment" element={<PaymentPage />} />
           <Route path="*" element={<PageNotFound />} />
         </Routes>

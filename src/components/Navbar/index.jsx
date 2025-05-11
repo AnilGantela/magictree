@@ -69,6 +69,13 @@ const Navbar = () => {
                 >
                   Internships/Summer Projects
                 </ExternalDropdownItem>
+                <ExternalDropdownItem
+                  href="https://www.zoho.com/recruit/supported-job-boards.html"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  Recruitment/Placements
+                </ExternalDropdownItem>
 
                 <DropdownItem to="/hr/planning">
                   Man Power Planning
@@ -77,13 +84,6 @@ const Navbar = () => {
                 <DropdownItem to="/hr/appraisal">
                   Appraisal Systems
                 </DropdownItem>
-                <ExternalDropdownItem
-                  href="https://www.zoho.com/recruit/supported-job-boards.html"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
-                  Recruitment/Placements
-                </ExternalDropdownItem>
               </Dropdown>
             </NavbarItem>
 
