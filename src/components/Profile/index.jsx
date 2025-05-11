@@ -47,7 +47,7 @@ const Profile = () => {
       }
     };
 
-    //   fetchUser();
+    fetchUser();
   }, [token, navigate]);
 
   const handleLogout = () => {
