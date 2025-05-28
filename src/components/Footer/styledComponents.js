@@ -15,6 +15,50 @@ export const FooterContainer = styled.footer`
   text-align: center;
 `;
 
+export const ModalOverlay = styled.div`
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.6);
+  z-index: 999;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+`;
+
+export const ModalContent = styled.div`
+  background: white;
+  color: black;
+  padding: 24px;
+  width: 90%;
+  border-radius: 12px;
+  position: relative;
+  animation: fadeIn 0.3s ease-in-out;
+
+  @keyframes fadeIn {
+    from {
+      transform: scale(0.95);
+      opacity: 0;
+    }
+    to {
+      transform: scale(1);
+      opacity: 1;
+    }
+  }
+`;
+
+export const CloseButton = styled.button`
+  position: absolute;
+  top: 12px;
+  right: 16px;
+  background: none;
+  border: none;
+  font-size: 1.5rem;
+  cursor: pointer;
+`;
+
 export const FooterContent = styled.div`
   max-width: 1200px;
   text-align: center;

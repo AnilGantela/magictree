@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import Cookies from "js-cookie";
 import {
   SignUpContainer,
@@ -9,6 +9,10 @@ import {
   Button,
   ErrorMessage,
   Title,
+  FormRow,
+  InputGroup,
+  AuthLink,
+  FormFooter,
 } from "./styledComponents";
 
 const SignUp = () => {
@@ -25,6 +29,7 @@ const SignUp = () => {
   });
   const [error, setError] = useState("");
   const navigate = useNavigate();
+
   useEffect(() => {
     const token = Cookies.get("magicTreeToken");
     if (token) {
@@ -82,84 +87,124 @@ const SignUp = () => {
   return (
     <SignUpContainer>
       <SignUpForm onSubmit={handleSubmit}>
-        <Title>Sign Up</Title>
+        <Title>Create Your Account</Title>
         {error && <ErrorMessage>{error}</ErrorMessage>}
 
-        <Label>Name</Label>
-        <Input
-          name="name"
-          value={formData.name}
-          onChange={handleChange}
-          required
-        />
+        <FormRow>
+          <InputGroup>
+            <Label>Full Name</Label>
+            <Input
+              name="name"
+              value={formData.name}
+              onChange={handleChange}
+              required
+              placeholder="John Doe"
+            />
+          </InputGroup>
+        </FormRow>
 
-        <Label>Email</Label>
-        <Input
-          name="email"
-          type="email"
-          value={formData.email}
-          onChange={handleChange}
-          required
-        />
+        <FormRow>
+          <InputGroup>
+            <Label>Email</Label>
+            <Input
+              name="email"
+              type="email"
+              value={formData.email}
+              onChange={handleChange}
+              required
+              placeholder="john@example.com"
+            />
+          </InputGroup>
+          <InputGroup>
+            <Label>Phone</Label>
+            <Input
+              name="phone"
+              value={formData.phone}
+              onChange={handleChange}
+              required
+              placeholder="+1234567890"
+            />
+          </InputGroup>
+        </FormRow>
 
-        <Label>Password</Label>
-        <Input
-          name="password"
-          type="password"
-          value={formData.password}
-          onChange={handleChange}
-          required
-        />
+        <FormRow>
+          <InputGroup>
+            <Label>Password</Label>
+            <Input
+              name="password"
+              type="password"
+              value={formData.password}
+              onChange={handleChange}
+              required
+              placeholder="••••••••"
+            />
+          </InputGroup>
+        </FormRow>
 
-        <Label>Phone</Label>
-        <Input
-          name="phone"
-          value={formData.phone}
-          onChange={handleChange}
-          required
-        />
+        <FormRow>
+          <InputGroup>
+            <Label>Street Address</Label>
+            <Input
+              name="street"
+              value={formData.street}
+              onChange={handleChange}
+              required
+              placeholder="123 Main St"
+            />
+          </InputGroup>
+        </FormRow>
 
-        <Label>Street</Label>
-        <Input
-          name="street"
-          value={formData.street}
-          onChange={handleChange}
-          required
-        />
+        <FormRow>
+          <InputGroup>
+            <Label>City</Label>
+            <Input
+              name="city"
+              value={formData.city}
+              onChange={handleChange}
+              required
+              placeholder="New York"
+            />
+          </InputGroup>
+          <InputGroup>
+            <Label>State/Province</Label>
+            <Input
+              name="state"
+              value={formData.state}
+              onChange={handleChange}
+              required
+              placeholder="NY"
+            />
+          </InputGroup>
+        </FormRow>
 
-        <Label>City</Label>
-        <Input
-          name="city"
-          value={formData.city}
-          onChange={handleChange}
-          required
-        />
+        <FormRow>
+          <InputGroup>
+            <Label>ZIP/Postal Code</Label>
+            <Input
+              name="zip"
+              value={formData.zip}
+              onChange={handleChange}
+              required
+              placeholder="10001"
+            />
+          </InputGroup>
+          <InputGroup>
+            <Label>Country</Label>
+            <Input
+              name="country"
+              value={formData.country}
+              onChange={handleChange}
+              required
+              placeholder="United States"
+            />
+          </InputGroup>
+        </FormRow>
 
-        <Label>State</Label>
-        <Input
-          name="state"
-          value={formData.state}
-          onChange={handleChange}
-          required
-        />
+        <Button type="submit">Create Account</Button>
 
-        <Label>ZIP</Label>
-        <Input
-          name="zip"
-          value={formData.zip}
-          onChange={handleChange}
-          required
-        />
-
-        <Label>Country</Label>
-        <Input
-          name="country"
-          value={formData.country}
-          onChange={handleChange}
-          required
-        />
-
-        <Button type="submit">Register</Button>
+        <FormFooter>
+          Already have an account? <AuthLink to="/login">Log in</AuthLink>
+        </FormFooter>
       </SignUpForm>
     </SignUpContainer>
   );

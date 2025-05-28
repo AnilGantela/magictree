@@ -11,9 +11,14 @@ import {
 
 const ProfileLayout = () => {
   const navigate = useNavigate();
+  const token = Cookies.get("magicTreeToken");
   const handleLogout = () => {
     Cookies.remove("magicTreeToken");
     navigate("/");
+  };
+
+  const handleLogin = () => {
+    navigate("/login");
   };
 
   return (
@@ -28,7 +33,11 @@ const ProfileLayout = () => {
         <SidebarOption onClick={() => navigate("/profile/orders")}>
           Orders
         </SidebarOption>
-        <LogoutButton onClick={handleLogout}>Logout</LogoutButton>
+        {token ? (
+          <LogoutButton onClick={handleLogout}>Logout</LogoutButton>
+        ) : (
+          <LogoutButton onClick={handleLogin}>Login</LogoutButton>
+        )}
       </Sidebar>
       <MainContent>
         <Outlet />

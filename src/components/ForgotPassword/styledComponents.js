@@ -195,3 +195,42 @@ export const SignUpLink = styled(Link)`
     text-decoration: underline;
   }
 `;
+
+export const PasswordInputContainer = styled.div`
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  font-size: 1rem;
+  transition: all 0.3s ease;
+  background-color: #fff;
+
+  &:focus {
+    outline: none;
+    border-color: #e34c26;
+    box-shadow: 0 0 0 2px rgba(227, 76, 38, 0.2);
+  }
+
+  &::placeholder {
+    color: #aaa;
+  }
+`;
+
+export const StyledInput2 = styled.input`
+  padding: 14px 16px;
+  border: none;
+  border-radius: 8px;
+  font-size: 1rem;
+  transition: all 0.3s ease;
+  background-color: #fff;
+  flex-grow: 1;
+  width: 90%;
+
+  &:focus {
+    outline: none;
+    border-color: #e34c26;
+    box-shadow: 0 0 0 2px rgba(227, 76, 38, 0.2);
+  }
+
+  &::placeholder {
+    color: #aaa;
+  }
+`;

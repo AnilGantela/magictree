@@ -1,22 +1,14 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate, useLocation, Link } from "react-router-dom";
 import Cookies from "js-cookie";
-import {
-  LoginContainer,
-  LoginForm,
-  Input,
-  Label,
-  Button,
-  ErrorMessage,
-  Title,
-  FooterText,
-  LinkButton,
-} from "./styledComponents";
+import { LinearGradient } from "react-text-gradients";
+import * as S from "./styledComponents";
 
 const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
   const location = useLocation();
 
@@ -32,6 +24,7 @@ const Login = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError("");
+    setIsLoading(true);
 
     try {
       const response = await fetch(
@@ -50,40 +43,71 @@ const Login = () => {
       navigate(redirectTo, { replace: true });
     } catch (err) {
       setError(err.message);
+    } finally {
+      setIsLoading(false);
     }
   };
 
   return (
-    <LoginContainer>
-      <LoginForm onSubmit={handleSubmit}>
-        <Title>Login</Title>
-        {error && <ErrorMessage>{error}</ErrorMessage>}
+    <S.Container>
+      <S.GradientForm>
+        <S.FormContent onSubmit={handleSubmit}>
+          <S.HeaderSection>
+            <LinearGradient gradient={["to right", "#6d1a0b, #e34c26"]}>
+              <S.Title>Welcome Back</S.Title>
+            </LinearGradient>
+            <S.Subtitle>Login to your Magic Tree account</S.Subtitle>
+          </S.HeaderSection>
 
-        <Label htmlFor="email">Email</Label>
-        <Input
-          type="email"
-          id="email"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-          required
-        />
+          {error && <S.ErrorMessage>{error}</S.ErrorMessage>}
 
-        <Label htmlFor="password">Password</Label>
-        <Input
-          type="password"
-          id="password"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-          required
-        />
+          <S.InputGroup>
+            <S.Label htmlFor="email">Email Address</S.Label>
+            <S.StyledInput
+              type="email"
+              id="email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              required
+              placeholder="Enter your email"
+            />
+          </S.InputGroup>
 
-        <Button type="submit">Login</Button>
+          <S.InputGroup>
+            <S.Label htmlFor="password">Password</S.Label>
+            <S.StyledInput
+              type="password"
+              id="password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              required
+              placeholder="••••••••"
+            />
+            <div style={{ display: "flex", justifyContent: "space-between" }}>
+              <S.ForgotLink to="/">Go Home</S.ForgotLink>
+              <S.ForgotLink to="/forgot-password">
+                Forgot Password?
+              </S.ForgotLink>
+            </div>
+          </S.InputGroup>
 
-        <FooterText>
-          Don't have an account? <LinkButton to="/signup">Sign Up</LinkButton>
-        </FooterText>
-      </LoginForm>
-    </LoginContainer>
+          <S.SubmitButton type="submit" disabled={isLoading}>
+            {isLoading ? (
+              <S.LoadingSpinner />
+            ) : (
+              <LinearGradient gradient={["to right", "#ffffff, #f0f0f0"]}>
+                Sign In
+              </LinearGradient>
+            )}
+          </S.SubmitButton>
+
+          <S.Footer>
+            Don't have an account?{" "}
+            <S.SignUpLink to="/signup">Create Account</S.SignUpLink>
+          </S.Footer>
+        </S.FormContent>
+      </S.GradientForm>
+    </S.Container>
   );
 };
 
