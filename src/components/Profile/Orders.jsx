@@ -62,7 +62,7 @@ const Orders = () => {
                 <strong>Address:</strong> {order.shippingAddress}
               </p>
               <p>
-                <strong>Total:</strong> ₹{order.totalAmount.toFixed(2)}
+                <strong>Total:</strong> ₹{order.totalAmount.toFixed(2) / 100}
               </p>
               {order.payment && (
                 <p>
