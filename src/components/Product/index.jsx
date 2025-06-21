@@ -22,6 +22,7 @@ import {
   ReviewItem,
   RatingStar,
 } from "./styledComponents";
+import Loader from "../Loader";
 
 const ProductPage = () => {
   const { id } = useParams();
@@ -128,7 +129,22 @@ const ProductPage = () => {
     navigate(`/checkout/${product._id}`);
   };
 
-  if (loading) return <Container>Loading...</Container>;
+  if (loading)
+    return (
+      <Container>
+        <div
+          style={{
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+            height: "90vh",
+            width: "100%",
+          }}
+        >
+          <Loader />
+        </div>
+      </Container>
+    );
   if (!product) return <Container>Product not found</Container>;
 
   const discountedPrice =
@@ -185,8 +201,12 @@ const ProductPage = () => {
 
           <TextLine>
             <Price>₹{discountedPrice}</Price>
-            <OriginalPrice>₹{product.price}</OriginalPrice>
-            <DiscountInfo>{product.discount}% OFF</DiscountInfo>
+            {product.discount > 0 && (
+              <OriginalPrice>₹{product.price}</OriginalPrice>
+            )}
+            {product.discount > 0 && (
+              <DiscountInfo>{product.discount}% OFF</DiscountInfo>
+            )}
           </TextLine>
 
           <Description>{product.description}</Description>

@@ -14,18 +14,21 @@ import {
   PriceAndCartRow,
   PriceAndRatingRow,
 } from "./styledComponents";
+import Loader from "../Loader";
 import { Carousel } from "react-responsive-carousel";
 import { useNavigate, useLocation } from "react-router-dom";
 import "react-responsive-carousel/lib/styles/carousel.min.css";
 
 const Home = () => {
   const [groupedProducts, setGroupedProducts] = useState({});
+  const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
   const location = useLocation();
 
   useEffect(() => {
     const fetchProducts = async () => {
       try {
+        setLoading(true);
         const url = "https://magictreebackend.onrender.com/products/";
         const response = await fetch(url);
         const data = await response.json();
@@ -38,6 +41,7 @@ const Home = () => {
           return acc;
         }, {});
         setGroupedProducts(grouped);
+        setLoading(false);
       } catch (error) {
         console.error(error.message);
       }
@@ -57,56 +61,61 @@ const Home = () => {
           interval={3000}
         >
           <div>
-            <img src="/banner1.jpg" alt="Banner 1" />
+            <img src="/banner1.png" alt="Banner 1" />
           </div>
           <div>
-            <img src="/banner2.webp" alt="Banner 2" />
+            <img src="/banner2.png" alt="Banner 2" />
           </div>
           <div>
-            <img src="/banner3.jpg" alt="Banner 3" />
+            <img src="/banner3.png" alt="Banner 3" />
           </div>
         </Carousel>
       </Banner>
+      {loading ? (
+        <Loader />
+      ) : (
+        <>
+          {Object.entries(groupedProducts).map(([category, products]) => (
+            <div key={category}>
+              <CategoryTitle>{category}</CategoryTitle>
+              <ProductSection>
+                {products.map((product) => {
+                  const discountedPrice = Math.round(
+                    product.price * (1 - (product.discount || 0) / 100)
+                  );
 
-      {Object.entries(groupedProducts).map(([category, products]) => (
-        <div key={category}>
-          <CategoryTitle>{category}</CategoryTitle>
-          <ProductSection>
-            {products.map((product) => {
-              const discountedPrice = Math.round(
-                product.price * (1 - (product.discount || 0) / 100)
-              );
-
-              return (
-                <ProductCard
-                  key={product._id || product.id}
-                  onClick={() => navigate(`/product/${product._id}`)}
-                >
-                  {product.discount > 0 && (
-                    <DiscountBadge>-{product.discount}%</DiscountBadge>
-                  )}
-                  <ProductImage
-                    src={product.images?.[1] || product.images?.[0]}
-                    alt={product.name}
-                  />
-                  <ProductTitle>{product.name}</ProductTitle>
-                  <PriceAndRatingRow>
-                    <div>
+                  return (
+                    <ProductCard
+                      key={product._id || product.id}
+                      onClick={() => navigate(`/product/${product._id}`)}
+                    >
                       {product.discount > 0 && (
-                        <StrikePrice>₹{product.price}</StrikePrice>
+                        <DiscountBadge>-{product.discount}%</DiscountBadge>
                       )}
-                      <ProductPrice>₹{discountedPrice}</ProductPrice>
-                    </div>
-                    <AverageRating>
-                      ⭐ {product.averageRating || 5}
-                    </AverageRating>
-                  </PriceAndRatingRow>
-                </ProductCard>
-              );
-            })}
-          </ProductSection>
-        </div>
-      ))}
+                      <ProductImage
+                        src={product.images?.[1] || product.images?.[0]}
+                        alt={product.name}
+                      />
+                      <ProductTitle>{product.name}</ProductTitle>
+                      <PriceAndRatingRow>
+                        <div>
+                          {product.discount > 0 && (
+                            <StrikePrice>₹{product.price}</StrikePrice>
+                          )}
+                          <ProductPrice>₹{discountedPrice}</ProductPrice>
+                        </div>
+                        <AverageRating>
+                          ⭐ {product.averageRating || 5}
+                        </AverageRating>
+                      </PriceAndRatingRow>
+                    </ProductCard>
+                  );
+                })}
+              </ProductSection>
+            </div>
+          ))}
+        </>
+      )}
     </HomeContainer>
   );
 };

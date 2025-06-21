@@ -95,7 +95,7 @@ export const FooterListItem = styled.li`
   }
 `;
 
-export const ContactInfo = styled.p`
+export const ContactInfo = styled.div`
   font-size: 14px;
   line-height: 1.6;
   color: #fff;

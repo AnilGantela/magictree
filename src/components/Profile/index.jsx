@@ -27,9 +27,6 @@ const ProfileLayout = () => {
         <SidebarOption onClick={() => navigate("/profile/user")}>
           User Details
         </SidebarOption>
-        <SidebarOption onClick={() => navigate("/profile/products")}>
-          Purchased Products
-        </SidebarOption>
         <SidebarOption onClick={() => navigate("/profile/orders")}>
           Orders
         </SidebarOption>

@@ -238,52 +238,78 @@ const Footer = () => {
           <FooterSection>
             <FooterTitle>Contact Us</FooterTitle>
             <ContactInfo>
-              <a
-                href="tel:+916281192474"
-                style={{ color: "white", textDecoration: "none" }}
+              <div
+                style={{
+                  display: "flex",
+                  flexDirection: "row",
+                  gap: "20px",
+                  alignItems: "center",
+                }}
               >
-                <FaPhoneAlt style={{ marginRight: "8px" }} /> +91 6281192474
-              </a>
-              <br />
-              <a
-                href="tel:+917013166557"
-                style={{ color: "white", textDecoration: "none" }}
-              >
-                <FaPhoneAlt style={{ marginRight: "8px" }} /> +91 7013166557
-              </a>
-              <br />
-              <a
-                href="tel:+917013670892"
-                style={{ color: "white", textDecoration: "none" }}
-              >
-                <FaPhoneAlt style={{ marginRight: "8px" }} /> +91 7013670892
-              </a>
-              <br />
-              <a
-                href="mailto:info@magictree.in"
-                style={{ color: "white", textDecoration: "none" }}
-              >
-                <FaEnvelope style={{ marginRight: "8px" }} /> info@magictree.in
-              </a>
-              <br />
-              <a
-                href="mailto:kolavennuc@gmail.com"
-                style={{ color: "white", textDecoration: "none" }}
-              >
-                <FaEnvelope style={{ marginRight: "8px" }} />{" "}
-                kolavennuc@gmail.com
-              </a>
-              <br />
-              MAGIC TREE INFO SOLUTIONS PVT. LTD
-              <br />
-              #30-15-139, 1st Floor, Rams Arcade,
-              <br />
-              Dabagardens, Visakhapatnam - 530020, AP, India
+                <div>
+                  <a
+                    href="tel:+916281192474"
+                    style={{ color: "white", textDecoration: "none" }}
+                  >
+                    <FaPhoneAlt style={{ marginRight: "8px" }} /> +91 6281192474
+                  </a>
+                  <br />
+                  <a
+                    href="tel:+917013166557"
+                    style={{ color: "white", textDecoration: "none" }}
+                  >
+                    <FaPhoneAlt style={{ marginRight: "8px" }} /> +91 7013166557
+                  </a>
+                  <br />
+                  <a
+                    href="tel:+917013670892"
+                    style={{ color: "white", textDecoration: "none" }}
+                  >
+                    <FaPhoneAlt style={{ marginRight: "8px" }} /> +91 7013670892
+                  </a>
+                </div>
+                <div>
+                  <a
+                    href="mailto:info@magictree.in"
+                    style={{ color: "white", textDecoration: "none" }}
+                  >
+                    <FaEnvelope style={{ marginRight: "8px" }} />{" "}
+                    info@magictree.in
+                  </a>
+                  <br />
+                  <a
+                    href="mailto:kolavennuc@gmail.com"
+                    style={{ color: "white", textDecoration: "none" }}
+                  >
+                    <FaEnvelope style={{ marginRight: "8px" }} />{" "}
+                    kolavennuc@gmail.com
+                  </a>
+                  <br />
+                  <a
+                    href="mailto:md@magictree.in"
+                    style={{ color: "white", textDecoration: "none" }}
+                  >
+                    <FaEnvelope style={{ marginRight: "8px" }} />{" "}
+                    md@magictree.in
+                  </a>
+                </div>
+              </div>
+              <div>
+                <br />
+                9-21-5/10, Flat No-302,
+                <br />
+                Lakshmi Narasimha Nilayam, C.B.M Compound, Near Timpany School,
+                <br />
+                Visakhapatnam (Urban)- 530003,
+                <br />
+                AP, India
+              </div>
             </ContactInfo>
           </FooterSection>
         </FooterContent>
         <FooterText>
-          &copy; {new Date().getFullYear()} magictree.com. Powered by ALETNAG.
+          &copy; {new Date().getFullYear()} magictree.com. developed by
+          ALETNAG❤️.
         </FooterText>
       </FooterContainer>
 

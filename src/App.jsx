@@ -4,6 +4,7 @@ import {
   Route,
   useLocation,
 } from "react-router-dom";
+import { Navigate } from "react-router-dom";
 import { useState } from "react";
 
 import Home from "./components/Home";
@@ -20,7 +21,6 @@ import PaymentPage from "./components/Payment";
 import Footer from "./components/Footer";
 import UserDetails from "./components/Profile/Userdetails";
 import Orders from "./components/Profile/Orders";
-import PurchasedProducts from "./components/Profile/PurchasedProducts";
 import ForgotPassword from "./components/ForgotPassword";
 
 function Layout({ children }) {
@@ -64,9 +64,9 @@ function App() {
           <Layout>
             <Routes>
               <Route path="/profile" element={<Profile />}>
+                <Route index element={<Navigate to="user" replace />} />
                 <Route path="user" element={<UserDetails />} />
                 <Route path="orders" element={<Orders />} />
-                <Route path="products" element={<PurchasedProducts />} />
               </Route>
               <Route path="/login" element={<Login />} />
               <Route path="/signup" element={<SignUp />} />

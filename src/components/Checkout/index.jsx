@@ -1,5 +1,6 @@
 import React, { useEffect, useState, useCallback } from "react";
 import { useLocation, useNavigate, useParams } from "react-router-dom";
+import ReactDOM from "react-dom";
 import axios from "axios";
 import Cookies from "js-cookie";
 import {
@@ -8,14 +9,63 @@ import {
   CartList,
   CartItem,
   AddressInput,
-  SummaryText,
   ButtonGroup,
   BackButton,
   PayButton,
   AddAddressButton,
   AddressFormContainer,
   AddressFormInput,
+  CheckoutFlexContainer,
 } from "./styledComponents";
+
+// Simple Modal Component
+const Modal = ({ children, isOpen, onClose }) => {
+  if (!isOpen) return null;
+  return ReactDOM.createPortal(
+    <div
+      style={{
+        position: "fixed",
+        top: 0,
+        left: 0,
+        right: 0,
+        bottom: 0,
+        backgroundColor: "rgba(0,0,0,0.5)",
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "center",
+        zIndex: 1000,
+      }}
+    >
+      <div
+        style={{
+          background: "#fff",
+          padding: "20px",
+          borderRadius: "8px",
+          maxWidth: "500px",
+          width: "90%",
+          position: "relative",
+        }}
+      >
+        <button
+          onClick={onClose}
+          style={{
+            position: "absolute",
+            top: "10px",
+            right: "10px",
+            border: "none",
+            background: "transparent",
+            fontSize: "20px",
+            cursor: "pointer",
+          }}
+        >
+          &times;
+        </button>
+        {children}
+      </div>
+    </div>,
+    document.body
+  );
+};
 
 const Checkout = () => {
   const location = useLocation();
@@ -30,7 +80,6 @@ const Checkout = () => {
   const [paymentMethod, setPaymentMethod] = useState("Cash on Delivery");
   const [showAddAddressForm, setShowAddAddressForm] = useState(false);
   const [isSingleProduct, setIsSingleProduct] = useState(false);
-
   const [newAddress, setNewAddress] = useState({
     street: "",
     city: "",
@@ -40,15 +89,14 @@ const Checkout = () => {
   });
   const [loading, setLoading] = useState(false);
 
-  const discount = 50;
-  const deliveryDate = new Date();
-  deliveryDate.setDate(deliveryDate.getDate() + 5);
   const token = Cookies.get("magicTreeToken");
 
   useEffect(() => {
     if (!token) {
       navigate("/login");
+      return;
     }
+
     const fetchProduct = async () => {
       try {
         const res = await axios.get(
@@ -67,19 +115,12 @@ const Checkout = () => {
           "https://magictreebackend.onrender.com/cart/items",
           { headers: { Authorization: `Bearer ${token}` } }
         );
-        console.log(res.data.items);
         setCartItems(res.data.items || []);
         setIsSingleProduct(false);
       } catch (err) {
         console.error("Failed to fetch cart items:", err);
       }
     };
-
-    if (productId) {
-      fetchProduct();
-    } else {
-      fetchCartItems();
-    }
 
     const fetchAddresses = async () => {
       try {
@@ -95,14 +136,9 @@ const Checkout = () => {
       }
     };
 
+    productId ? fetchProduct() : fetchCartItems();
     fetchAddresses();
   }, [location.state, productId, token]);
-
-  const calculateTotal = () =>
-    cartItems.reduce(
-      (sum, item) => sum + (item.price - (item.discount || 0)) * item.quantity,
-      0
-    ) - discount;
 
   const handlePayNow = useCallback(async () => {
     if (!name || !phone || selectedAddressIndex === null) {
@@ -121,15 +157,7 @@ const Checkout = () => {
 
     try {
       setLoading(true);
-      const orderBody = {
-        products: orderProducts,
-        shippingAddress: shippingAddressString,
-        shippingName: name,
-        phoneNumber: phone,
-        paymentMethod: paymentMethod,
-      };
 
-      console.log("Order body before sending:", orderBody);
       const orderRes = await axios.post(
         "https://magictreebackend.onrender.com/order/create",
         {
@@ -137,7 +165,7 @@ const Checkout = () => {
           shippingAddress: shippingAddressString,
           shippingName: name,
           phoneNumber: phone,
-          paymentMethod: paymentMethod,
+          paymentMethod,
         },
         { headers: { Authorization: `Bearer ${token}` } }
       );
@@ -145,12 +173,9 @@ const Checkout = () => {
       if (paymentMethod === "Cash on Delivery") {
         alert("Order placed with Cash on Delivery!");
         navigate("/profile/orders");
-        return;
-      }
-
-      if (paymentMethod === "Online payment") {
+      } else {
         if (!window.Razorpay) {
-          alert("Razorpay SDK not loaded. Please refresh page.");
+          alert("Razorpay SDK not loaded.");
           return;
         }
 
@@ -210,72 +235,133 @@ const Checkout = () => {
   return (
     <CheckoutContainer>
       <h1>Checkout</h1>
-      <SectionTitle>Cart Items</SectionTitle>
-      <CartList>
-        {cartItems.length > 0 ? (
-          cartItems.map((item) => (
-            <CartItem key={item._id || item.productId}>
-              {item.name} - ₹{item.price - (item.discount || 0)} x{" "}
-              {item.quantity}
-            </CartItem>
-          ))
-        ) : (
-          <CartItem>No items in cart.</CartItem>
-        )}
-      </CartList>
-      <SectionTitle>Deliver To</SectionTitle>
-      <AddressInput
-        value={name}
-        onChange={(e) => setName(e.target.value)}
-        placeholder="Your Name"
-      />
-      <AddressInput
-        value={phone}
-        onChange={(e) => setPhone(e.target.value)}
-        placeholder="Phone Number"
-        type="tel"
-      />
-      <SectionTitle>Select Address</SectionTitle>
-      <CartList style={{ display: "flex", flexWrap: "wrap" }}>
-        {addresses.length > 0 ? (
-          addresses.map((addr, idx) => (
-            <CartItem
-              key={idx}
-              style={{
-                border:
-                  selectedAddressIndex === idx
-                    ? "2px solid green"
-                    : "1px solid #ccc",
-                cursor: "pointer",
-                width: "280px",
-                margin: "10px",
-              }}
-              onClick={() => setSelectedAddressIndex(idx)}
-            >
-              <label>
-                <input
-                  type="radio"
-                  name="address"
-                  checked={selectedAddressIndex === idx}
-                  onChange={() => setSelectedAddressIndex(idx)}
-                />
-                <div>
-                  <p>{addr.street}</p>
-                  <p>
-                    {addr.city}, {addr.state}
-                  </p>
-                  <p>
-                    {addr.zip}, {addr.country}
-                  </p>
-                </div>
-              </label>
-            </CartItem>
-          ))
-        ) : (
-          <CartItem>No saved addresses found.</CartItem>
-        )}
-      </CartList>
-      {showAddAddressForm && (
+      <CheckoutFlexContainer>
+        <div>
+          <SectionTitle>Items</SectionTitle>
+          <CartList>
+            {cartItems.length > 0 ? (
+              cartItems.map((item) => (
+                <CartItem key={item._id || item.productId}>
+                  {item.name} - ₹{item.price - (item.discount || 0)} x{" "}
+                  {item.quantity}
+                </CartItem>
+              ))
+            ) : (
+              <CartItem>No items in cart.</CartItem>
+            )}
+          </CartList>
+        </div>
+
+        <div>
+          <SectionTitle>Deliver To</SectionTitle>
+          <AddressInput
+            value={name}
+            onChange={(e) => setName(e.target.value)}
+            placeholder="Your Name"
+          />
+          <AddressInput
+            value={phone}
+            onChange={(e) => setPhone(e.target.value)}
+            placeholder="Phone Number"
+            type="tel"
+          />
+          <div
+            style={{
+              display: "flex",
+              justifyContent: "space-between",
+              alignItems: "center",
+            }}
+          >
+            <SectionTitle>Select Address</SectionTitle>
+            <AddAddressButton onClick={() => setShowAddAddressForm(true)}>
+              Add New Address
+            </AddAddressButton>
+          </div>
+          <CartList style={{ display: "flex", flexWrap: "wrap", gap: "16px" }}>
+            {addresses.length > 0 ? (
+              addresses.map((addr, idx) => (
+                <CartItem
+                  key={idx}
+                  style={{
+                    border:
+                      selectedAddressIndex === idx
+                        ? "2px solid green"
+                        : "1px solid #ccc",
+                    cursor: "pointer",
+                    flex: "0 1 calc(50% - 16px)", // 2 columns
+                    boxSizing: "border-box",
+                    padding: "10px",
+                  }}
+                  onClick={() => setSelectedAddressIndex(idx)}
+                >
+                  <label style={{ display: "flex", flexDirection: "column" }}>
+                    <input
+                      type="radio"
+                      name="address"
+                      checked={selectedAddressIndex === idx}
+                      onChange={() => setSelectedAddressIndex(idx)}
+                      style={{ marginBottom: "8px" }}
+                    />
+                    <div>
+                      <p>{addr.street}</p>
+                      <p>
+                        {addr.city}, {addr.state}
+                      </p>
+                      <p>
+                        {addr.zip}, {addr.country}
+                      </p>
+                    </div>
+                  </label>
+                </CartItem>
+              ))
+            ) : (
+              <CartItem>No saved addresses found.</CartItem>
+            )}
+          </CartList>
+        </div>
+
+        <div>
+          <SectionTitle>Payment Method</SectionTitle>
+          <div>
+            <label>
+              <input
+                type="radio"
+                name="paymentMethod"
+                value="Cash on Delivery"
+                checked={paymentMethod === "Cash on Delivery"}
+                onChange={() => setPaymentMethod("Cash on Delivery")}
+              />
+              Cash on Delivery
+            </label>
+            <label>
+              <input
+                type="radio"
+                name="paymentMethod"
+                value="Online payment"
+                checked={paymentMethod === "Online payment"}
+                onChange={() => setPaymentMethod("Online payment")}
+              />
+              Pay Now
+            </label>
+          </div>
+
+          <ButtonGroup>
+            <BackButton onClick={() => navigate("/cart")}>
+              Back to Cart
+            </BackButton>
+            <PayButton onClick={handlePayNow} disabled={loading}>
+              {loading ? "Processing..." : "place order"}
+            </PayButton>
+          </ButtonGroup>
+        </div>
+      </CheckoutFlexContainer>
+
+      {/* Address Popup Modal */}
+      <Modal
+        isOpen={showAddAddressForm}
+        onClose={() => setShowAddAddressForm(false)}
+      >
+        <h3>Add New Address</h3>
         <AddressFormContainer>
           <AddressFormInput
             placeholder="Street"
@@ -314,37 +400,7 @@ const Checkout = () => {
           />
           <button onClick={handleAddAddress}>Add Address</button>
         </AddressFormContainer>
-      )}
-      {/* Payment Method Selection */}
-      <SectionTitle>Payment Method</SectionTitle>
-      <div>
-        <label>
-          <input
-            type="radio"
-            name="paymentMethod"
-            value="Cash on Delivery"
-            checked={paymentMethod === "Cash on Delivery"}
-            onChange={() => setPaymentMethod("Cash on Delivery")}
-          />
-          Cash on Delivery
-        </label>
-        <label>
-          <input
-            type="radio"
-            name="paymentMethod"
-            value="Online payment"
-            checked={paymentMethod === "Online payment"}
-            onChange={() => setPaymentMethod("Online payment")}
-          />
-          Pay Now
-        </label>
-      </div>
-      <ButtonGroup>
-        <BackButton onClick={() => navigate("/cart")}>Back to Cart</BackButton>
-        <PayButton onClick={handlePayNow} disabled={loading}>
-          {loading ? "Processing..." : "Pay Now"}
-        </PayButton>
-      </ButtonGroup>
+      </Modal>
     </CheckoutContainer>
   );
 };

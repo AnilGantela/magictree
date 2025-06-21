@@ -1,6 +1,7 @@
 import React, { useEffect } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import axios from "axios";
+import Loader from "../Loader";
 import Cookies from "js-cookie";
 
 const PaymentPage = () => {
@@ -97,7 +98,9 @@ const PaymentPage = () => {
         backgroundColor: "#fff",
       }}
     >
-      <h1>Processing Payment</h1>
+      <h1>
+        <Loader color="orange" />
+      </h1>
     </div>
   );
 };

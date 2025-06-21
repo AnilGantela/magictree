@@ -3,6 +3,7 @@ import styled from "styled-components";
 export const SubcategoryContainer = styled.div`
   display: flex;
   padding: 1rem;
+  height: 90vh;
 `;
 
 export const SortButton = styled.button`
@@ -127,7 +128,6 @@ export const Banner = styled.div`
 
 export const ProductsGrid = styled.div`
   width: 100%;
-  border: 1px solid #ddd;
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
   gap: 1.5rem;

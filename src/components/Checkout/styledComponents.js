@@ -3,7 +3,8 @@ import { Link } from "react-router-dom";
 
 export const CheckoutContainer = styled.div`
   padding: 20px;
-  max-width: 800px;
+  width: 100%;
+  min-height: 85vh;
   margin: 0 auto;
 `;
 
@@ -32,6 +33,18 @@ export const CartItem = styled.div`
   display: flex;
   justify-content: space-between;
   align-items: center;
+`;
+
+export const CheckoutFlexContainer = styled.div`
+  display: flex;
+  justify-content: space-around;
+  width: 95%;
+  border: 1px solid #ccc;
+  flex-direction: row;
+
+  @media (max-width: 768px) {
+    flex-direction: column;
+  }
 `;
 
 // Address input fields

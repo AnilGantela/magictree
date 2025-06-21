@@ -36,10 +36,8 @@ export const ImagesSection = styled.div`
   max-width: 49%;
   display: flex;
   justify-content: space-around;
-  border: 2px solid #ccc;
   height: 50vh;
   padding: 10px;
-  border: 2px solid red;
   background-color: #ffffff;
 `;
 
@@ -84,14 +82,13 @@ export const DetailsSection = styled.div`
   width: 48%;
   text-align: left;
   box-shadow: 0 6px 10px rgba(0, 0, 0, 0.1);
-  border: 2px solid red;
 `;
 
 export const ProductName = styled.div`
   font-size: 32px;
   font-weight: 700;
   margin-bottom: 12px;
-  color: #fff;
+  color: #06038d;
   width: 100%;
   display: -webkit-box;
   -webkit-line-clamp: 2; /* Limit to 2 lines */
@@ -151,8 +148,9 @@ export const AddToCartButton = styled.button`
 `;
 
 export const ReviewSection = styled.div`
-  margin-top: 25px;
-
+  margin: 25px;
+  box-shadow: 0 6px 10px rgba(0, 0, 0, 0.1);
+  padding: 20px;
   h3 {
     margin-bottom: 10px;
     font-size: 22px;

@@ -22,10 +22,13 @@ const Orders = () => {
           }
         );
 
-        // Filter out orders that don't have a payment
-        const filteredOrders = response.data.filter(
-          (order) => order.payment && order.payment.status
-        );
+        const filteredOrders = response.data
+          .filter((order) => order.payment && order.payment.status)
+          .sort(
+            (a, b) =>
+              new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
+          );
+
         setOrders(filteredOrders);
       } catch (error) {
         console.error("Error fetching orders:", error);
@@ -52,6 +55,10 @@ const Orders = () => {
               <Status status={order.status}>{order.status}</Status>
             </OrderHeader>
             <OrderDetails>
+              <p>
+                <strong>Order Date:</strong>{" "}
+                {new Date(order.createdAt).toLocaleString()}
+              </p>
               <p>
                 <strong>Shipping Name:</strong> {order.shippingName}
               </p>
@@ -99,16 +106,11 @@ const Container = styled.div`
   height: 90vh;
   overflow-y: scroll;
 
-  /* Hide scrollbar for Webkit (Chrome, Safari) */
   &::-webkit-scrollbar {
     width: 0;
     height: 0;
   }
-
-  /* Hide scrollbar for Firefox */
   scrollbar-width: none;
-
-  /* Hide scrollbar for IE, Edge */
   -ms-overflow-style: none;
 `;
 

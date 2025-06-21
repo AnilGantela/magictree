@@ -21,6 +21,7 @@ import {
   EmptyCartImage,
 } from "./styledComponents";
 import { Carousel } from "react-responsive-carousel";
+import Loader from "../Loader";
 import "react-responsive-carousel/lib/styles/carousel.min.css";
 
 const SubcategoryPage = () => {
@@ -29,6 +30,7 @@ const SubcategoryPage = () => {
   const [products, setProducts] = useState([]);
   const [filteredProducts, setFilteredProducts] = useState([]);
   const [sortOption, setSortOption] = useState("");
+  const [loading, setLoading] = useState(true);
   const [searchQuery, setSearchQuery] = useState("");
 
   useEffect(() => {
@@ -39,6 +41,7 @@ const SubcategoryPage = () => {
   }, []);
 
   useEffect(() => {
+    setLoading(true);
     const fetchProducts = async () => {
       try {
         const { data } = await axios.get(
@@ -46,6 +49,7 @@ const SubcategoryPage = () => {
         );
         setProducts(data.products || []);
         setFilteredProducts(data.products || []);
+        setLoading(false);
       } catch (error) {
         console.error("Error fetching products:", error);
       }
@@ -101,11 +105,11 @@ const SubcategoryPage = () => {
           value={searchQuery}
           onChange={(e) => setSearchQuery(e.target.value)}
           style={{
-            padding: "8px 12px",
+            padding: "10px 10px",
             borderRadius: "6px",
             border: "1px solid #ccc",
             marginBottom: "20px",
-            width: "100%",
+            width: "90%",
             outline: "none",
           }}
         />
@@ -161,24 +165,28 @@ const SubcategoryPage = () => {
             interval={3000}
           >
             <div>
-              <img src="/banner1.jpg" alt="Banner 1" />
+              <img src="/banner1.png" alt="Banner 1" />
             </div>
             <div>
-              <img src="/banner2.webp" alt="Banner 2" />
+              <img src="/banner2.png" alt="Banner 2" />
             </div>
             <div>
-              <img src="/banner3.jpg" alt="Banner 3" />
+              <img src="/banner3.png" alt="Banner 3" />
             </div>
           </Carousel>
         </Banner>
 
-        <ProductsGrid>
-          {filteredProducts.length === 0 ? (
-            <EmptyCartImageWrapper>
-              <EmptyCartImage src="/noproducts.png" alt="no-products" />
-            </EmptyCartImageWrapper>
-          ) : (
-            filteredProducts.map((product) => {
+        {loading ? (
+          <p style={{ textAlign: "center", padding: "2rem" }}>
+            <Loader />
+          </p>
+        ) : filteredProducts.length === 0 ? (
+          <EmptyCartImageWrapper>
+            <EmptyCartImage src="/noproducts.png" alt="no-products" />
+          </EmptyCartImageWrapper>
+        ) : (
+          <ProductsGrid>
+            {filteredProducts.map((product) => {
               const discountedPrice = Math.round(
                 product.price - (product.price * product.discount) / 100
               );
@@ -198,7 +206,9 @@ const SubcategoryPage = () => {
                   <ProductTitle>{product.name}</ProductTitle>
                   <PriceAndRatingRow>
                     <div>
-                      <StrikePrice>₹{product.price}</StrikePrice>
+                      {product.discount > 0 && (
+                        <StrikePrice>₹{product.price}</StrikePrice>
+                      )}
                       <ProductPrice>₹{discountedPrice}</ProductPrice>
                     </div>
                     <AverageRating>
@@ -207,9 +217,9 @@ const SubcategoryPage = () => {
                   </PriceAndRatingRow>
                 </ProductCard>
               );
-            })
-          )}
-        </ProductsGrid>
+            })}
+          </ProductsGrid>
+        )}
       </ContentArea>
     </SubcategoryContainer>
   );

@@ -33,10 +33,6 @@ const Navbar = () => {
           </NavbarLogo>
           <NavbarLinks>
             <NavbarItem>
-              <NavbarLink to="/industrial">Industrial</NavbarLink>
-            </NavbarItem>
-
-            <NavbarItem>
               <NavbarLink>Security & Safety</NavbarLink>
               <Dropdown>
                 <DropdownItem to="/security-safety/biometrics">
@@ -44,66 +40,6 @@ const Navbar = () => {
                 </DropdownItem>
                 <DropdownItem to="/security-safety/cctv surveillance">
                   CCTV Surveillance
-                </DropdownItem>
-              </Dropdown>
-            </NavbarItem>
-
-            <NavbarItem>
-              <NavbarLink>Eco Friendly</NavbarLink>
-              <Dropdown>
-                <DropdownItem to="/eco-friendly/bags">Bags</DropdownItem>
-                <DropdownItem to="/eco-friendly/chappals">
-                  Chappals
-                </DropdownItem>
-                <DropdownItem to="/eco-friendly/clothes">Clothes</DropdownItem>
-              </Dropdown>
-            </NavbarItem>
-
-            <NavbarItem>
-              <NavbarLink>HR Consultancy</NavbarLink>
-              <Dropdown>
-                <ExternalDropdownItem
-                  href="https://internshala.com/"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
-                  Internships/Summer Projects
-                </ExternalDropdownItem>
-                <ExternalDropdownItem
-                  href="https://www.zoho.com/recruit/supported-job-boards.html"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
-                  Recruitment/Placements
-                </ExternalDropdownItem>
-
-                <DropdownItem to="/hr/planning">
-                  Man Power Planning
-                </DropdownItem>
-                <DropdownItem to="/hr/training">Training</DropdownItem>
-                <DropdownItem to="/hr/appraisal">
-                  Appraisal Systems
-                </DropdownItem>
-              </Dropdown>
-            </NavbarItem>
-
-            <NavbarItem>
-              <NavbarLink>Marketing</NavbarLink>
-              <Dropdown>
-                <DropdownItem to="/marketing/research">
-                  Market Research
-                </DropdownItem>
-                <DropdownItem to="/marketing/selling">
-                  Product Selling/Buying
-                </DropdownItem>
-                <DropdownItem to="/marketing/advertising">
-                  Advertising
-                </DropdownItem>
-                <DropdownItem to="/marketing/design">
-                  Product Design
-                </DropdownItem>
-                <DropdownItem to="/marketing/pricing">
-                  Product Pricing
                 </DropdownItem>
               </Dropdown>
             </NavbarItem>
