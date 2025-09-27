@@ -22,6 +22,7 @@ import {
   ModalContent,
   CloseButton,
 } from "./styledComponents";
+import DunsSeal from "../Duns";
 
 // Render Functions
 const renderHome = () => (
@@ -231,6 +232,9 @@ const Footer = () => {
                 rel="noopener noreferrer"
               >
                 <FaLinkedinIn />
+              </IconLink>
+              <IconLink>
+                <DunsSeal />
               </IconLink>
             </SocialLinks>
           </FooterSection>

@@ -22,6 +22,7 @@ import Footer from "./components/Footer";
 import UserDetails from "./components/Profile/Userdetails";
 import Orders from "./components/Profile/Orders";
 import ForgotPassword from "./components/ForgotPassword";
+import AccountDeletionPage from "./components/AccountDeletion";
 
 function Layout({ children }) {
   const location = useLocation();
@@ -35,6 +36,7 @@ function Layout({ children }) {
     "/signup",
     "/forgot-password",
     "/payment",
+    "/account-deletion",
   ];
 
   const shouldHideLayout = hideLayoutRoutes.includes(location.pathname);
@@ -69,12 +71,17 @@ function App() {
                 <Route path="orders" element={<Orders />} />
               </Route>
               <Route path="/login" element={<Login />} />
+              <Route
+                path="/account-deletion"
+                element={<AccountDeletionPage />}
+              />
               <Route path="/signup" element={<SignUp />} />
               <Route path="/forgot-password" element={<ForgotPassword />} />
               <Route
                 path="/:mainCategory/:subcategory"
                 element={<Subcategory />}
               />
+
               <Route path="/product/:id" element={<Product />} />
               <Route path="/" element={<Home />} />
               <Route path="/checkout" element={<Checkout />} />
