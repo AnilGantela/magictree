@@ -23,6 +23,11 @@ import UserDetails from "./components/Profile/Userdetails";
 import Orders from "./components/Profile/Orders";
 import ForgotPassword from "./components/ForgotPassword";
 import AccountDeletionPage from "./components/AccountDeletion";
+import PrivacyPolicy from "./components/PrivacyPolicy";
+import Objectives from "./components/Objectives";
+import Terms_Conditions from "./components/Terms_Conditions";
+import Import_Fees_Deposit from "./components/Import_Fees_Deposit";
+import WarrantyPolicy from "./components/Warranty";
 
 function Layout({ children }) {
   const location = useLocation();
@@ -74,6 +79,14 @@ function App() {
               <Route
                 path="/account-deletion"
                 element={<AccountDeletionPage />}
+              />
+              <Route path="/privacy-policy" element={<PrivacyPolicy />} />
+              <Route path="/terms-conditions" element={<Terms_Conditions />} />
+              <Route path="/objectives" element={<Objectives />} />
+              <Route path="/warranty-policy" element={<WarrantyPolicy />} />
+              <Route
+                path="/import-fees-deposit"
+                element={<Import_Fees_Deposit />}
               />
               <Route path="/signup" element={<SignUp />} />
               <Route path="/forgot-password" element={<ForgotPassword />} />

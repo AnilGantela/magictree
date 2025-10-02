@@ -117,7 +117,12 @@ export default function AccountDeletionPage() {
         </InfoWrapper>
         <ContentWrapper>
           <ImageTitleWrapper>
-            <img src="/logof.jpg" alt="Logo" style={{ height: "100px" }} />
+            <img
+              src="/logof.jpg"
+              alt="Logo"
+              style={{ height: "100px" }}
+              onClick={() => navigate("/")}
+            />
             <Title>Account Deletion</Title>
           </ImageTitleWrapper>
 

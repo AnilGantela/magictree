@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import {
   FaPhoneAlt,
   FaEnvelope,
@@ -111,18 +112,7 @@ const renderPrivacyPolicy = () => (
       We prioritize your privacy. Learn how we collect, use, and protect your
       personal data in accordance with data protection laws.
     </p>
-
-    <button
-      onClick={() => {
-        window.open(
-          "https://drive.google.com/file/d/1E5xH9Hb1idI-YsUmXy-31RqMB5iv5guy/view",
-          "_blank"
-        );
-      }}
-      style={{ padding: "10px 20px", fontSize: "16px", cursor: "pointer" }}
-    >
-      Open PDF
-    </button>
+    <button onClick={() => navigate("/privacy-policy")}></button>
   </>
 );
 
@@ -183,10 +173,22 @@ const renderFunctions = {
 const Footer = () => {
   const [isModalOpen, setModalOpen] = useState(false);
   const [selectedItem, setSelectedItem] = useState("");
-
+  const navigate = useNavigate();
   const openModal = (item) => {
-    setSelectedItem(item);
-    setModalOpen(true);
+    if (item === "Privacy Policy") {
+      navigate("/privacy-policy"); // navigate to privacy policy page
+    } else if (item === "Objectives") {
+      navigate("/objectives"); // navigate to objectives page
+    } else if (item === "Terms & Conditions") {
+      navigate("/terms-conditions");
+    } else if (item === "Import Fees & Deposit") {
+      navigate("/import-fees-deposit");
+    } else if (item === "Warranties") {
+      navigate("/warranty-policy");
+    } else {
+      setSelectedItem(item);
+      setModalOpen(true);
+    }
   };
 
   const closeModal = () => {
