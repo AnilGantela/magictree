@@ -1,5 +1,7 @@
-import React, { useEffect, useState, useCallback } from "react";
+import React, { useEffect, useState, useCallback, useRef } from "react";
 import { useLocation, useNavigate, useParams } from "react-router-dom";
+import Lottie from "lottie-react";
+import addAddress from "../../assets/addAddress.json"; // your Lottie file
 import ReactDOM from "react-dom";
 import axios from "axios";
 import Cookies from "js-cookie";
@@ -16,6 +18,19 @@ import {
   AddressFormContainer,
   AddressFormInput,
   CheckoutFlexContainer,
+  ContainerTitle,
+  PaymentButtonContainer,
+  ContainerTitleBox,
+  ItemImage,
+  CartItemContainer,
+  UserDetailsContainer,
+  CartItemTitleContainer,
+  ItemDetails,
+  NameInput,
+  InputContainer,
+  UserDetailsTitleContainer,
+  Input,
+  PaymentContainer,
 } from "./styledComponents";
 
 // Simple Modal Component
@@ -88,6 +103,7 @@ const Checkout = () => {
     country: "",
   });
   const [loading, setLoading] = useState(false);
+  const lottieRef = useRef();
 
   const token = Cookies.get("magicTreeToken");
 
@@ -195,6 +211,7 @@ const Checkout = () => {
       }
     } catch (err) {
       console.error("Order creation failed:", err);
+      navigate("/checkout");
       alert("Failed to place order.");
     } finally {
       setLoading(false);
@@ -234,50 +251,94 @@ const Checkout = () => {
 
   return (
     <CheckoutContainer>
-      <h1>Checkout</h1>
+      <ContainerTitleBox>
+        <ContainerTitle>Checkout Page</ContainerTitle>
+      </ContainerTitleBox>
+
       <CheckoutFlexContainer>
-        <div>
-          <SectionTitle>Items</SectionTitle>
+        <CartItemContainer>
+          <CartItemTitleContainer>
+            <SectionTitle>Items</SectionTitle>
+          </CartItemTitleContainer>
+
           <CartList>
             {cartItems.length > 0 ? (
               cartItems.map((item) => (
                 <CartItem key={item._id || item.productId}>
-                  {item.name} - ₹{item.price - (item.discount || 0)} x{" "}
-                  {item.quantity}
+                  <ItemImage
+                    src={item.image || "/fallback-image.png"}
+                    alt={item.name || "Product"}
+                  />
+                  <ItemDetails>
+                    {item.name} - ₹{item.price - (item.discount || 0)} x
+                    {item.quantity}
+                  </ItemDetails>
                 </CartItem>
               ))
             ) : (
               <CartItem>No items in cart.</CartItem>
             )}
           </CartList>
-        </div>
+        </CartItemContainer>
 
-        <div>
-          <SectionTitle>Deliver To</SectionTitle>
-          <AddressInput
-            value={name}
-            onChange={(e) => setName(e.target.value)}
-            placeholder="Your Name"
-          />
-          <AddressInput
-            value={phone}
-            onChange={(e) => setPhone(e.target.value)}
-            placeholder="Phone Number"
-            type="tel"
-          />
+        <UserDetailsContainer>
+          <UserDetailsTitleContainer>
+            <SectionTitle>Deliver To :</SectionTitle>
+          </UserDetailsTitleContainer>
+          <InputContainer>
+            <Input>
+              <label htmlFor="nameInput">Name :</label>
+              <NameInput
+                id="nameInput"
+                value={name}
+                onChange={(e) => setName(e.target.value)}
+                placeholder="To Name"
+              />
+            </Input>
+
+            <Input>
+              <label htmlFor="phoneInput">Phone :</label>
+              <AddressInput
+                id="phoneInput"
+                value={phone}
+                onChange={(e) => setPhone(e.target.value)}
+                placeholder="Phone Number"
+                type="tel"
+              />
+            </Input>
+          </InputContainer>
+
           <div
             style={{
               display: "flex",
+              width: "100%",
               justifyContent: "space-between",
+              border: "1px solid gray",
               alignItems: "center",
+              paddingLeft: "10px",
+              paddingRight: "30px",
+              boxSizing: "border-box",
             }}
           >
-            <SectionTitle>Select Address</SectionTitle>
+            <h3>Select Address : </h3>
             <AddAddressButton onClick={() => setShowAddAddressForm(true)}>
-              Add New Address
+              <div
+                style={{ display: "flex", alignItems: "center", gap: "8px" }}
+                onMouseEnter={() => lottieRef.current?.play()}
+                onMouseLeave={() => lottieRef.current?.stop()}
+              >
+                <span>Add New Address </span>
+                <Lottie
+                  lottieRef={lottieRef}
+                  animationData={addAddress}
+                  style={{ width: 20, height: 20 }}
+                  loop={false}
+                  autoplay={false}
+                />
+              </div>
             </AddAddressButton>
           </div>
-          <CartList style={{ display: "flex", flexWrap: "wrap", gap: "16px" }}>
+          <CartList style={{ display: "flex", height: "200px", gap: "16px" }}>
             {addresses.length > 0 ? (
               addresses.map((addr, idx) => (
                 <CartItem
@@ -288,29 +349,23 @@ const Checkout = () => {
                         ? "2px solid green"
                         : "1px solid #ccc",
                     cursor: "pointer",
-                    flex: "0 1 calc(50% - 16px)", // 2 columns
+                    flex: "row", // 2 columns
                     boxSizing: "border-box",
+
                     padding: "10px",
                   }}
                   onClick={() => setSelectedAddressIndex(idx)}
                 >
-                  <label style={{ display: "flex", flexDirection: "column" }}>
+                  <label style={{ display: "flex", flexDirection: "row" }}>
                     <input
                       type="radio"
                       name="address"
                       checked={selectedAddressIndex === idx}
                       onChange={() => setSelectedAddressIndex(idx)}
-                      style={{ marginBottom: "8px" }}
+                      style={{ marginBottom: "2px" }}
                     />
-                    <div>
-                      <p>{addr.street}</p>
-                      <p>
-                        {addr.city}, {addr.state}
-                      </p>
-                      <p>
-                        {addr.zip}, {addr.country}
-                      </p>
-                    </div>
+                    {addr.street}, {addr.city}, {addr.state}, {addr.zip},{" "}
+                    {addr.country}
                   </label>
                 </CartItem>
               ))
@@ -318,11 +373,11 @@ const Checkout = () => {
               <CartItem>No saved addresses found.</CartItem>
             )}
           </CartList>
-        </div>
+        </UserDetailsContainer>
 
-        <div>
+        <PaymentContainer>
           <SectionTitle>Payment Method</SectionTitle>
-          <div>
+          <PaymentButtonContainer>
             <label>
               <input
                 type="radio"
@@ -343,17 +398,15 @@ const Checkout = () => {
               />
               Pay Now
             </label>
-          </div>
+          </PaymentButtonContainer>
 
           <ButtonGroup>
-            <BackButton onClick={() => navigate("/cart")}>
-              Back to Cart
-            </BackButton>
+            <BackButton onClick={() => navigate("/")}>Back to Cart</BackButton>
             <PayButton onClick={handlePayNow} disabled={loading}>
               {loading ? "Processing..." : "place order"}
             </PayButton>
           </ButtonGroup>
-        </div>
+        </PaymentContainer>
       </CheckoutFlexContainer>
 
       {/* Address Popup Modal */}

@@ -14,7 +14,7 @@ import {
 } from "./styledComponents";
 import Cart from "../Cart";
 
-const Navbar = () => {
+const Navbar = ({ showCart = true }) => {
   const [isCartOpen, setCartOpen] = useState(false);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
 
@@ -51,7 +51,9 @@ const Navbar = () => {
         </NavbarWrapper>
       </NavbarContainer>
 
-      <Cart isOpen={isCartOpen} onClose={() => setCartOpen(false)} />
+      {showCart && (
+        <Cart isOpen={isCartOpen} onClose={() => setCartOpen(false)} />
+      )}
     </>
   );
 };

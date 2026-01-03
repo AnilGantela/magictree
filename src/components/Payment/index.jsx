@@ -62,7 +62,7 @@ const PaymentPage = () => {
         } catch (err) {
           console.error("Verification error:", err);
           alert("Payment verification failed.");
-          navigate(-1); // Go back to previous page if error occurs
+          navigate("/checkout"); // Go back to previous page if error occurs
         }
       },
       prefill: { name, contact: phone },
@@ -95,7 +95,7 @@ const PaymentPage = () => {
         display: "flex",
         justifyContent: "center",
         alignItems: "center",
-        backgroundColor: "#fff",
+        backgroundColor: "transparent",
       }}
     >
       <h1>
