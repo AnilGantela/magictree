@@ -75,13 +75,13 @@ const PaymentPage = () => {
     rzp.on("payment.failed", function (response) {
       console.error("Payment failed:", response);
       alert("Payment failed. Please try again.");
-      navigate(-1); // Go back to the previous page on failure
+      navigate(-2); // Go back to the previous page on failure
     });
 
     rzp.on("payment.cancelled", function () {
       console.log("Payment cancelled.");
       alert("Payment cancelled. Returning to the previous page.");
-      navigate(-1); // Go back to the previous page on cancellation
+      navigate(-2); // Go back to the previous page on cancellation
     });
 
     rzp.open(); // Open the Razorpay modal

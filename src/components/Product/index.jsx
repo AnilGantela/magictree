@@ -200,7 +200,7 @@ const ProductPage = () => {
           </TextLine>
 
           <TextLine>
-            <Price>₹{discountedPrice}</Price>
+            <Price>₹{discountedPrice.toFixed(2)}</Price>
             {product.discount > 0 && (
               <OriginalPrice>₹{product.price}</OriginalPrice>
             )}

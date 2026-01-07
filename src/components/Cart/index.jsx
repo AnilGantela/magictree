@@ -168,9 +168,10 @@ const Cart = ({ isOpen, onToggle }) => {
                       <ItemPriceQuantityWrapper>
                         <ItemPrice>
                           ₹
-                          {((item.price || 0) - (item.discount || 0)).toFixed(
-                            2
-                          )}
+                          {(
+                            (item.price || 0) -
+                            ((item.price || 0) * (item.discount || 0)) / 100
+                          ).toFixed(2)}
                         </ItemPrice>
                         <div style={{ display: "flex", gap: "6px" }}>
                           <button

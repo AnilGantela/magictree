@@ -15,6 +15,7 @@ export const ContainerTitleBox = styled.div`
   height: 8vh;
   display: flex;
   align-items: center;
+  justify-content: space-between;
   margin-bottom: 2vh;
   background: hsla(20, 100%, 22%, 1);
 
@@ -50,7 +51,6 @@ export const ContainerTitle = styled.h1`
 
 export const CheckoutFlexContainer = styled.div`
   width: 98vw;
-  border: 1px solid green;
   height: 88vh;
   display: flex;
   justify-content: space-between;
@@ -159,7 +159,6 @@ export const UserDetailsContainer = styled.div`
   align-items: center;
   width: 58%;
   height: 100%;
-  border: 1px solid orange;
   text-align: left;
 `;
 
@@ -203,7 +202,6 @@ export const Input = styled.div`
 export const NameInput = styled.input`
   width: 75%;
   padding: 10px;
-
   border-radius: 5px;
   border-color: hsla(151, 93%, 22%, 0.8);
 `;
@@ -211,9 +209,78 @@ export const NameInput = styled.input`
 export const AddressInput = styled.input`
   width: 75%;
   padding: 10px;
-
   border-radius: 5px;
   border-color: hsla(151, 93%, 22%, 0.8);
+`;
+// Style for the "Add Address" button
+export const AddAddressButton = styled.button`
+  padding: 10px 10px;
+  background: linear-gradient(to left, #06038d 0%, #1a1abf 100%);
+  color: white;
+  border: none;
+
+  border-radius: 5px;
+  cursor: pointer;
+  &:hover {
+    background-color: #0056b3;
+  }
+`;
+
+// Style for address items in the list
+export const AddressList = styled.div`
+  display: flex;
+  flex-direction: row;
+  height: 150px;
+  width: 95%;
+  overflow-x: auto;
+  padding-left: 20px;
+  padding-right: 20px;
+  box-sizing: border-box;
+  gap: 10px;
+  margin-top: 10px;
+  /* Firefox */
+  scrollbar-width: thin;
+  scrollbar-color: hsla(151, 93%, 22%, 1) transparent;
+
+  /* Chrome, Safari, Edge */
+  &::-webkit-scrollbar {
+    width: 6px; /* thin width */
+  }
+
+  &::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background-color: hsla(151, 93%, 22%, 1);
+    border-radius: 3px;
+  }
+
+  &::-webkit-scrollbar-thumb:hover {
+    background-color: hsla(151, 93%, 22%, 0.8);
+  }
+`;
+
+export const AddressItem = styled.div`
+  background-color: #f9f9f9;
+  box-sizing: border-box;
+  min-height: 100px;
+  max-height: 130px;
+  min-width: 170px;
+  margin: 10px 0;
+  border-radius: 5px;
+  cursor: pointer;
+  display: flex;
+  justify-content: space-around;
+  padding: 10px;
+  align-items: center;
+  input[type="radio"] {
+    display: none;
+  }
+  border: ${(props) => (props.Selected ? "2px solid green" : "1px solid #ccc")};
+  &:hover {
+    border: 1px solid #007bff;
+  }
 `;
 
 export const PaymentContainer = styled.div`
@@ -222,13 +289,76 @@ export const PaymentContainer = styled.div`
   align-items: center;
   width: 20%;
   height: 100%;
-  border: 1px solid purple;
+  justify-content: flex-start;
+  overflow: hidden;
+`;
+
+export const SummarySection = styled.div`
+  width: 100%;
+  box-sizing: border-box;
+  margin-bottom: 20px;
+  border-radius: 25px;
+  overflow: hidden;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
+`;
+
+export const SummaryTitleContainer = styled.div`
+  width: 100%;
+  text-align: center;
+  background: linear-gradient(
+    to right,
+    hsla(151, 93%, 22%, 1) 0%,
+    hsla(151, 97%, 12%, 1) 100%
+  );
+  color: white;
+  height: 50px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+`;
+
+export const SummaryTitle = styled.h3`
+  font-size: 1.2em;
+  margin-bottom: 10px;
+`;
+
+export const SummaryContent = styled.div`
+  padding: 10px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 3px;
+  box-sizing: border-box;
+  height: 85%;
 `;
 
 // Summary text for discount, total, and delivery date
 export const SummaryText = styled.p`
-  font-size: 1.1em;
-  margin-bottom: 10px;
+  font-size: 1em;
+  margin: 0;
+  box-sizing: border-box;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+`;
+
+export const SummaryAnswer = styled.span`
+  font-weight: bold;
+  box-sizing: border-box;
+  margin: 0;
+  width: 100%;
+  color: red;
+  text-align: right;
+`;
+
+export const PaymentSection = styled.div`
+  width: 100%;
+  box-sizing: border-box;
+  margin-bottom: 20px;
+  border-radius: 25px;
+  overflow: hidden;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
 `;
 
 // Group for action buttons (Back and Pay Now)
@@ -241,11 +371,15 @@ export const ButtonGroup = styled.div`
 
 // Back button style
 export const BackButton = styled.button`
-  padding: 10px 20px;
-  background-color: #f0f0f0;
-  border: 1px solid #ccc;
-  border-radius: 5px;
+  padding: 10px 10px;
+  background-color: white;
+  border: 3px solid red;
+  border-radius: 1px;
+  font-weight: bold;
+  font-size: 1em;
+  color: red;
   cursor: pointer;
+  margin-right: 10px;
   &:hover {
     background-color: #ddd;
   }
@@ -264,27 +398,12 @@ export const PayButton = styled.button`
   }
 `;
 
-// Style for the "Add Address" button
-export const AddAddressButton = styled.button`
-  padding: 10px 10px;
-  background: linear-gradient(to left, #06038d 0%, #1a1abf 100%);
-  color: white;
-  border: none;
-
-  border-radius: 5px;
-  cursor: pointer;
-  &:hover {
-    background-color: #0056b3;
-  }
-`;
-
 // Container for the address form when adding a new address
 export const AddressFormContainer = styled.div`
   margin-top: 20px;
   background-color: #f9f9f9;
   padding: 20px;
   border-radius: 5px;
-  border: 1px solid #ddd;
 `;
 
 // Input fields for the address form
@@ -294,22 +413,6 @@ export const AddressFormInput = styled.input`
   margin-bottom: 10px;
   border: 1px solid #ccc;
   border-radius: 5px;
-`;
-
-// Style for address items in the list
-export const AddressItem = styled.div`
-  display: flex;
-  flex-direction: column;
-  padding: 10px;
-  margin: 10px;
-  border: 1px solid #ccc;
-  border-radius: 5px;
-  width: 300px;
-  cursor: pointer;
-  transition: border 0.3s;
-  &:hover {
-    border: 1px solid #007bff;
-  }
 `;
 
 // Style for the radio button to select address

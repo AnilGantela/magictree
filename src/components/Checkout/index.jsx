@@ -31,7 +31,17 @@ import {
   UserDetailsTitleContainer,
   Input,
   PaymentContainer,
+  AddressItem,
+  AddressList,
+  SummarySection,
+  SummaryTitle,
+  SummaryText,
+  SummaryAnswer,
+  SummaryTitleContainer,
+  SummaryContent,
+  PaymentSection,
 } from "./styledComponents";
+import Cart from "../Cart";
 
 // Simple Modal Component
 const Modal = ({ children, isOpen, onClose }) => {
@@ -95,6 +105,7 @@ const Checkout = () => {
   const [paymentMethod, setPaymentMethod] = useState("Cash on Delivery");
   const [showAddAddressForm, setShowAddAddressForm] = useState(false);
   const [isSingleProduct, setIsSingleProduct] = useState(false);
+  const [totalAmount, setTotalAmount] = useState(0);
   const [newAddress, setNewAddress] = useState({
     street: "",
     city: "",
@@ -119,6 +130,7 @@ const Checkout = () => {
           `https://magictreebackend.onrender.com/products/${productId}`
         );
         setCartItems([{ ...res.data.product, quantity: 1 }]);
+        console.log("Single product fetched:", res.data.product);
         setIsSingleProduct(true);
       } catch (err) {
         console.error("Failed to fetch product:", err);
@@ -132,6 +144,17 @@ const Checkout = () => {
           { headers: { Authorization: `Bearer ${token}` } }
         );
         setCartItems(res.data.items || []);
+        let total = res.data.items.reduce((sum, item) => {
+          const discounted = (
+            item.price -
+            (item.price * (item.discount || 0)) / 100
+          ).toFixed(2);
+          console.log("Item:", item, "Discounted Price:", discounted);
+          return sum + discounted * item.quantity;
+        }, 0);
+
+        total.toFixed(2);
+        setTotalAmount(total);
         setIsSingleProduct(false);
       } catch (err) {
         console.error("Failed to fetch cart items:", err);
@@ -253,6 +276,7 @@ const Checkout = () => {
     <CheckoutContainer>
       <ContainerTitleBox>
         <ContainerTitle>Checkout Page</ContainerTitle>
+        <BackButton onClick={() => navigate("/")}>Cancel</BackButton>
       </ContainerTitleBox>
 
       <CheckoutFlexContainer>
@@ -266,12 +290,16 @@ const Checkout = () => {
               cartItems.map((item) => (
                 <CartItem key={item._id || item.productId}>
                   <ItemImage
-                    src={item.image || "/fallback-image.png"}
+                    src={item.image || (isSingleProduct ? item.images[0] : "")}
                     alt={item.name || "Product"}
                   />
                   <ItemDetails>
-                    {item.name} - ₹{item.price - (item.discount || 0)} x
-                    {item.quantity}
+                    {item.name} - ₹
+                    {(
+                      (item.price || 0) -
+                      ((item.price || 0) * (item.discount || 0)) / 100
+                    ).toFixed(2)}{" "}
+                    x {item.quantity}
                   </ItemDetails>
                 </CartItem>
               ))
@@ -292,6 +320,11 @@ const Checkout = () => {
                 id="nameInput"
                 value={name}
                 onChange={(e) => setName(e.target.value)}
+                onInput={(e) => {
+                  if (e.target.value.length > 20) {
+                    e.target.value = e.target.value.slice(0, 20);
+                  }
+                }}
                 placeholder="To Name"
               />
             </Input>
@@ -313,7 +346,6 @@ const Checkout = () => {
               display: "flex",
               width: "100%",
               justifyContent: "space-between",
-              border: "1px solid gray",
               alignItems: "center",
               paddingLeft: "10px",
               paddingRight: "30px",
@@ -338,22 +370,12 @@ const Checkout = () => {
               </div>
             </AddAddressButton>
           </div>
-          <CartList style={{ display: "flex", height: "200px", gap: "16px" }}>
+          <AddressList>
             {addresses.length > 0 ? (
               addresses.map((addr, idx) => (
-                <CartItem
+                <AddressItem
                   key={idx}
-                  style={{
-                    border:
-                      selectedAddressIndex === idx
-                        ? "2px solid green"
-                        : "1px solid #ccc",
-                    cursor: "pointer",
-                    flex: "row", // 2 columns
-                    boxSizing: "border-box",
-
-                    padding: "10px",
-                  }}
+                  Selected={selectedAddressIndex === idx}
                   onClick={() => setSelectedAddressIndex(idx)}
                 >
                   <label style={{ display: "flex", flexDirection: "row" }}>
@@ -367,45 +389,81 @@ const Checkout = () => {
                     {addr.street}, {addr.city}, {addr.state}, {addr.zip},{" "}
                     {addr.country}
                   </label>
-                </CartItem>
+                </AddressItem>
               ))
             ) : (
               <CartItem>No saved addresses found.</CartItem>
             )}
-          </CartList>
+          </AddressList>
         </UserDetailsContainer>
 
         <PaymentContainer>
-          <SectionTitle>Payment Method</SectionTitle>
-          <PaymentButtonContainer>
-            <label>
-              <input
-                type="radio"
-                name="paymentMethod"
-                value="Cash on Delivery"
-                checked={paymentMethod === "Cash on Delivery"}
-                onChange={() => setPaymentMethod("Cash on Delivery")}
-              />
-              Cash on Delivery
-            </label>
-            <label>
-              <input
-                type="radio"
-                name="paymentMethod"
-                value="Online payment"
-                checked={paymentMethod === "Online payment"}
-                onChange={() => setPaymentMethod("Online payment")}
-              />
-              Pay Now
-            </label>
-          </PaymentButtonContainer>
+          <SummarySection>
+            <SummaryTitleContainer>
+              <SummaryTitle>Order Summary</SummaryTitle>
+            </SummaryTitleContainer>
+            <SummaryContent>
+              <SummaryText>
+                To: <SummaryAnswer>{name || "N/A"}</SummaryAnswer>
+              </SummaryText>
 
-          <ButtonGroup>
-            <BackButton onClick={() => navigate("/")}>Back to Cart</BackButton>
-            <PayButton onClick={handlePayNow} disabled={loading}>
-              {loading ? "Processing..." : "place order"}
-            </PayButton>
-          </ButtonGroup>
+              <SummaryText>
+                Phone: <SummaryAnswer>{phone || "N/A"}</SummaryAnswer>
+              </SummaryText>
+
+              <SummaryText>Address:</SummaryText>
+              <SummaryAnswer>
+                {selectedAddressIndex !== null &&
+                addresses[selectedAddressIndex]
+                  ? `${addresses[selectedAddressIndex].street}, ${addresses[selectedAddressIndex].city}, ${addresses[selectedAddressIndex].state}, ${addresses[selectedAddressIndex].zip}, ${addresses[selectedAddressIndex].country}`
+                  : "N/A"}
+              </SummaryAnswer>
+              <SummaryText>
+                ItemsCount:
+                <SummaryAnswer>
+                  {cartItems.reduce((acc, item) => acc + item.quantity, 0)}
+                </SummaryAnswer>
+              </SummaryText>
+
+              <SummaryText>
+                PayableAmount: <SummaryAnswer>₹{totalAmount}</SummaryAnswer>
+              </SummaryText>
+            </SummaryContent>
+          </SummarySection>
+          <PaymentSection>
+            <SummaryTitleContainer>
+              <SectionTitle>Payment Method</SectionTitle>
+            </SummaryTitleContainer>
+
+            <PaymentButtonContainer>
+              <label>
+                <input
+                  type="radio"
+                  name="paymentMethod"
+                  value="Cash on Delivery"
+                  checked={paymentMethod === "Cash on Delivery"}
+                  onChange={() => setPaymentMethod("Cash on Delivery")}
+                />
+                Cash on Delivery
+              </label>
+              <label>
+                <input
+                  type="radio"
+                  name="paymentMethod"
+                  value="Online payment"
+                  checked={paymentMethod === "Online payment"}
+                  onChange={() => setPaymentMethod("Online payment")}
+                />
+                Pay Now
+              </label>
+            </PaymentButtonContainer>
+
+            <ButtonGroup>
+              <PayButton onClick={handlePayNow} disabled={loading}>
+                {loading ? "Processing..." : "place order"}
+              </PayButton>
+            </ButtonGroup>
+          </PaymentSection>
         </PaymentContainer>
       </CheckoutFlexContainer>
 
