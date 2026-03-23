@@ -23,6 +23,7 @@ import {
 import { Carousel } from "react-responsive-carousel";
 import Loader from "../Loader";
 import "react-responsive-carousel/lib/styles/carousel.min.css";
+import HomeBanner from "../HomeBanner";
 
 const SubcategoryPage = () => {
   const { subcategory } = useParams();
@@ -45,7 +46,7 @@ const SubcategoryPage = () => {
     const fetchProducts = async () => {
       try {
         const { data } = await axios.get(
-          `https://magictreebackend.onrender.com/products/subcategory/${subcategory}`
+          `https://magictreebackend.onrender.com/products/subcategory/${subcategory}`,
         );
         setProducts(data.products || []);
         setFilteredProducts(data.products || []);
@@ -88,7 +89,7 @@ const SubcategoryPage = () => {
     // Filter by search query
     if (searchQuery.trim()) {
       sorted = sorted.filter((product) =>
-        product.name.toLowerCase().includes(searchQuery.toLowerCase())
+        product.name.toLowerCase().includes(searchQuery.toLowerCase()),
       );
     }
 
@@ -156,26 +157,7 @@ const SubcategoryPage = () => {
       </Sidebar>
 
       <ContentArea>
-        <Banner>
-          <Carousel
-            autoPlay
-            infiniteLoop
-            showThumbs={false}
-            showStatus={false}
-            interval={3000}
-          >
-            <div>
-              <img src="/banner1.png" alt="Banner 1" />
-            </div>
-            <div>
-              <img src="/banner2.png" alt="Banner 2" />
-            </div>
-            <div>
-              <img src="/banner3.png" alt="Banner 3" />
-            </div>
-          </Carousel>
-        </Banner>
-
+        <HomeBanner images={["/banner1.png", "/banner2.png", "/banner3.png"]} />
         {loading ? (
           <p style={{ textAlign: "center", padding: "2rem" }}>
             <Loader />
@@ -188,7 +170,7 @@ const SubcategoryPage = () => {
           <ProductsGrid>
             {filteredProducts.map((product) => {
               const discountedPrice = Math.round(
-                product.price - (product.price * product.discount) / 100
+                product.price - (product.price * product.discount) / 100,
               );
 
               return (

@@ -5,25 +5,29 @@ export const HomeContainer = styled.div`
   margin: 10px auto;
 `;
 
-export const Banner = styled.div`
-  width: 100%;
-  height: 400px;
-  border: 2px solid #ccc;
-
-  .carousel .slide img {
-    width: 100%;
-    height: 400px;
-    object-fit: cover;
-  }
-`;
-
 export const ProductSection = styled.div`
-  display: flex;
+  display: grid;
+  grid-auto-flow: column; /* fill columns instead of rows */
+  grid-template-rows: repeat(1, auto); /* exactly 2 rows */
   gap: 1rem;
-  flex-wrap: wrap;
-  padding: 0 1rem;
-  margin-top: 1rem;
+  grid-auto-columns: max-content;
+  justify-content: start;
+
+  overflow-x: auto; /* horizontal scroll */
+  padding: 1rem;
   margin-bottom: 2rem;
+
+  scroll-behavior: smooth;
+
+  /* Optional: hide scrollbar */
+  &::-webkit-scrollbar {
+    height: 6px;
+    display: none; /* Hide scrollbar for WebKit browsers */
+  }
+  &::-webkit-scrollbar-thumb {
+    background: #ccc;
+    border-radius: 10px;
+  }
 `;
 
 export const PriceAndRatingRow = styled.div`

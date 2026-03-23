@@ -38,7 +38,7 @@ const ProductPage = () => {
       try {
         setLoading(true);
         const res = await axios.get(
-          `https://magictreebackend.onrender.com/products/${id}`
+          `https://magictreebackend.onrender.com/products/${id}`,
         );
         setProduct(res.data.product);
         setMainImage(res.data.product.images[0]);
@@ -65,12 +65,12 @@ const ProductPage = () => {
             headers: {
               Authorization: `Bearer ${token}`,
             },
-          }
+          },
         );
 
         // Check if the product is already in the cart
         const isProductInCart = res.data.items.some(
-          (item) => item.productId === product._id
+          (item) => item.productId === product._id,
         );
         setIsInCart(isProductInCart);
       } catch (err) {
@@ -110,7 +110,7 @@ const ProductPage = () => {
           headers: {
             Authorization: `Bearer ${token}`,
           },
-        }
+        },
       );
 
       if (res.status === 200) {
@@ -154,22 +154,29 @@ const ProductPage = () => {
     <Container>
       <ProductContainer>
         <ImagesSection>
-          <ThumbnailRow>
-            {product.images.map((img, idx) => (
-              <Thumbnail
-                key={idx}
-                src={img}
-                alt={`thumb-${idx}`}
-                isActive={mainImage === img}
-                onClick={() => changeImage(img)}
-              />
-            ))}
-          </ThumbnailRow>
-          <MainImage src={mainImage} alt="Main" />
+          {product.images.length > 1 ? (
+            <>
+              <ThumbnailRow>
+                {product.images.map((img, idx) => (
+                  <Thumbnail
+                    key={idx}
+                    src={img}
+                    alt={`thumb-${idx}`}
+                    isActive={mainImage === img}
+                    onClick={() => changeImage(img)}
+                  />
+                ))}
+              </ThumbnailRow>
+              <MainImage src={mainImage} alt="Main" />
+            </>
+          ) : (
+            <MainImage src={mainImage} alt="Main" />
+          )}
         </ImagesSection>
 
         <DetailsSection>
           <ProductName>{product.name}</ProductName>
+          <TextLine>{product.brand}</TextLine>
           <TextLine>
             <strong>Category:</strong> {product.category}{" "}
             <strong>Sub-Category:</strong>{" "}

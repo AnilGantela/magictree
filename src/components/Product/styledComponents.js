@@ -82,6 +82,7 @@ export const DetailsSection = styled.div`
   width: 48%;
   text-align: left;
   box-shadow: 0 6px 10px rgba(0, 0, 0, 0.1);
+  background-color: #eee3e3;
 `;
 
 export const ProductName = styled.div`
@@ -151,6 +152,7 @@ export const ReviewSection = styled.div`
   margin: 25px;
   box-shadow: 0 6px 10px rgba(0, 0, 0, 0.1);
   padding: 20px;
+  background-color: #eee3e3;
   h3 {
     margin-bottom: 10px;
     font-size: 22px;

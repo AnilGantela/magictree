@@ -88,7 +88,7 @@ const Modal = ({ children, isOpen, onClose }) => {
         {children}
       </div>
     </div>,
-    document.body
+    document.body,
   );
 };
 
@@ -127,7 +127,7 @@ const Checkout = () => {
     const fetchProduct = async () => {
       try {
         const res = await axios.get(
-          `https://magictreebackend.onrender.com/products/${productId}`
+          `https://magictreebackend.onrender.com/products/${productId}`,
         );
         setCartItems([{ ...res.data.product, quantity: 1 }]);
         console.log("Single product fetched:", res.data.product);
@@ -141,7 +141,7 @@ const Checkout = () => {
       try {
         const res = await axios.get(
           "https://magictreebackend.onrender.com/cart/items",
-          { headers: { Authorization: `Bearer ${token}` } }
+          { headers: { Authorization: `Bearer ${token}` } },
         );
         setCartItems(res.data.items || []);
         let total = res.data.items.reduce((sum, item) => {
@@ -165,7 +165,7 @@ const Checkout = () => {
       try {
         const res = await axios.get(
           "https://magictreebackend.onrender.com/user/addresses",
-          { headers: { Authorization: `Bearer ${token}` } }
+          { headers: { Authorization: `Bearer ${token}` } },
         );
         setAddresses(res.data);
         const defaultIdx = res.data.findIndex((a) => a.isDefault);
@@ -206,7 +206,7 @@ const Checkout = () => {
           phoneNumber: phone,
           paymentMethod,
         },
-        { headers: { Authorization: `Bearer ${token}` } }
+        { headers: { Authorization: `Bearer ${token}` } },
       );
 
       if (paymentMethod === "Cash on Delivery") {
@@ -255,7 +255,7 @@ const Checkout = () => {
       const res = await axios.post(
         "https://magictreebackend.onrender.com/user/address",
         newAddress,
-        { headers: { Authorization: `Bearer ${token}` } }
+        { headers: { Authorization: `Bearer ${token}` } },
       );
       setAddresses([...addresses, res.data]);
       setShowAddAddressForm(false);
@@ -457,13 +457,12 @@ const Checkout = () => {
                 Pay Now
               </label>
             </PaymentButtonContainer>
-
-            <ButtonGroup>
-              <PayButton onClick={handlePayNow} disabled={loading}>
-                {loading ? "Processing..." : "place order"}
-              </PayButton>
-            </ButtonGroup>
           </PaymentSection>
+          <ButtonGroup>
+            <PayButton onClick={handlePayNow} disabled={loading}>
+              {loading ? "Processing..." : "place order"}
+            </PayButton>
+          </ButtonGroup>
         </PaymentContainer>
       </CheckoutFlexContainer>
 

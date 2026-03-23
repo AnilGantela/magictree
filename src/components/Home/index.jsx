@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
 import {
   HomeContainer,
-  Banner,
   ProductSection,
   CategoryTitle,
   ProductCard,
@@ -18,6 +17,7 @@ import Loader from "../Loader";
 import { Carousel } from "react-responsive-carousel";
 import { useNavigate, useLocation } from "react-router-dom";
 import "react-responsive-carousel/lib/styles/carousel.min.css";
+import HomeBanner from "../HomeBanner";
 
 const Home = () => {
   const [groupedProducts, setGroupedProducts] = useState({});
@@ -52,25 +52,8 @@ const Home = () => {
 
   return (
     <HomeContainer>
-      <Banner>
-        <Carousel
-          autoPlay
-          infiniteLoop
-          showThumbs={false}
-          showStatus={false}
-          interval={3000}
-        >
-          <div>
-            <img src="/banner1.png" alt="Banner 1" />
-          </div>
-          <div>
-            <img src="/banner2.png" alt="Banner 2" />
-          </div>
-          <div>
-            <img src="/banner3.png" alt="Banner 3" />
-          </div>
-        </Carousel>
-      </Banner>
+      <HomeBanner images={[]} />
+
       {loading ? (
         <Loader />
       ) : (
@@ -81,7 +64,7 @@ const Home = () => {
               <ProductSection>
                 {products.map((product) => {
                   const discountedPrice = Math.round(
-                    product.price * (1 - (product.discount || 0) / 100)
+                    product.price * (1 - (product.discount || 0) / 100),
                   );
 
                   return (

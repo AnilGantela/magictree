@@ -296,6 +296,7 @@ export const PaymentContainer = styled.div`
 export const SummarySection = styled.div`
   width: 100%;
   box-sizing: border-box;
+  height: 60%;
   margin-bottom: 20px;
   border-radius: 25px;
   overflow: hidden;
@@ -355,8 +356,13 @@ export const SummaryAnswer = styled.span`
 export const PaymentSection = styled.div`
   width: 100%;
   box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: center;
   margin-bottom: 20px;
   border-radius: 25px;
+  padding-bottom: 20px;
   overflow: hidden;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
 `;
