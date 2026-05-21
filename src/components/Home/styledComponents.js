@@ -8,7 +8,7 @@ export const HomeContainer = styled.div`
 export const ProductSection = styled.div`
   display: grid;
   grid-auto-flow: column; /* fill columns instead of rows */
-  grid-template-rows: repeat(1, auto); /* exactly 2 rows */
+  grid-template-rows: repeat(2, auto); /* exactly 2 rows */
   gap: 1rem;
   grid-auto-columns: max-content;
   justify-content: start;

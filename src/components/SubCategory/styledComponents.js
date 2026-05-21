@@ -3,7 +3,7 @@ import styled from "styled-components";
 export const SubcategoryContainer = styled.div`
   display: flex;
   padding: 1rem;
-  min-height: 90vh;
+  max-height: 90vh;
 `;
 
 export const SortButton = styled.button`
@@ -116,6 +116,12 @@ export const FilterTitle = styled.h3`
 export const ContentArea = styled.div`
   flex: 1;
   padding: 1rem;
+  overflow-y: scroll;
+  overflow-x: hidden;
+
+  &::-webkit-scrollbar {
+    display: none;
+  }
 `;
 
 export const Banner = styled.div`
@@ -136,7 +142,7 @@ export const ProductsGrid = styled.div`
   ); /* ✅ match card */
 
   gap: 2rem;
-  padding: 1rem;
+  padding: 0.5rem;
 `;
 export const EmptyCartImageWrapper = styled.div`
   display: flex;

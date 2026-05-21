@@ -128,6 +128,7 @@ export const Description = styled.div`
   font-size: 16px;
   margin: 12px 0;
   text-align: justify;
+  white-space: pre-line;
 `;
 
 export const AddToCartButton = styled.button`
