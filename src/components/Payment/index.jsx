@@ -1,106 +1,168 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useRef } from "react";
+
 import { useLocation, useNavigate } from "react-router-dom";
+
 import axios from "axios";
-import Loader from "../Loader";
+
 import Cookies from "js-cookie";
 
+import Loader from "../Loader";
+
 const PaymentPage = () => {
-  const location = useLocation(); // Get location object using useLocation
-  const navigate = useNavigate(); // Get navigate function to navigate to different routes
-  const { razorpayOrderId, razorpayKeyId, amount, currency, name, phone } =
-    location.state || {}; // Destructure orderId and amount from location.state
+  const navigate = useNavigate();
+
+  const location = useLocation();
+
+  const paymentOpened = useRef(false);
+
   const token = Cookies.get("magicTreeToken");
-  // Check if the required properties are missing
-  if (!razorpayOrderId || !amount || !razorpayKeyId) {
-    return (
-      <div
-        style={{
-          width: "100vw",
-          height: "91vh",
-          display: "flex",
-          justifyContent: "center",
-          alignItems: "center",
-          backgroundColor: "#fff",
-        }}
-      >
-        Error: Missing payment details.
-      </div>
-    );
-  }
+
+  const {
+    razorpayOrderId,
+    razorpayKeyId,
+    amount,
+    currency,
+    name,
+    phone,
+    email,
+  } = location.state || {};
 
   useEffect(() => {
+    if (!razorpayOrderId || !razorpayKeyId || !amount) {
+      navigate("/checkout");
+
+      return;
+    }
+  }, [razorpayOrderId, razorpayKeyId, amount, navigate]);
+
+  useEffect(() => {
+    if (paymentOpened.current) return;
+
+    paymentOpened.current = true;
+
     if (!window.Razorpay) {
-      alert("Razorpay SDK not loaded. Please refresh the page.");
+      alert("Razorpay SDK not loaded");
+
+      navigate("/checkout");
+
       return;
     }
 
+    let paymentCompleted = false;
+
     const options = {
       key: razorpayKeyId,
-      amount: (amount * 100).toString(), // Convert to paise
+
+      amount,
+
       currency,
+
       name: "Magic Tree",
+
       description: "Order Payment",
+
       order_id: razorpayOrderId,
+
+      prefill: {
+        name: name || "",
+
+        email: email || "",
+
+        contact: phone || "",
+      },
+
+      theme: {
+        color: "#06038d",
+      },
+
       handler: async (response) => {
         try {
-          const verifyRes = await axios.post(
-            "https://magictreebackend.onrender.com/payment/verify",
+          paymentCompleted = true;
+
+          const verifyResponse = await axios.post(
+            "https://magictreebackend.onrender.com/payments/verify",
             {
               razorpayOrderId: response.razorpay_order_id,
+
               razorpayPaymentId: response.razorpay_payment_id,
+
               razorpaySignature: response.razorpay_signature,
             },
-            { headers: { Authorization: `Bearer ${token}` } }
+
+            {
+              headers: {
+                Authorization: `Bearer ${token}`,
+              },
+            },
           );
-          console.log(verifyRes.data);
-          if (verifyRes.data.success) {
-            navigate("/profile/orders"); // Navigate to orders page on success
+
+          if (verifyResponse.data.success) {
+            navigate("/profile/orders");
           } else {
-            alert("Payment verification failed.");
-            navigate(-1); // Go back to previous page if verification fails
+            alert("Payment verification failed");
+
+            navigate("/checkout");
           }
-        } catch (err) {
-          console.error("Verification error:", err);
-          alert("Payment verification failed.");
-          navigate("/checkout"); // Go back to previous page if error occurs
+        } catch (error) {
+          console.error(error);
+
+          navigate("/checkout");
         }
       },
-      prefill: { name, contact: phone },
-      theme: { color: "#06038d" },
+
+      modal: {
+        escape: true,
+
+        backdropclose: true,
+
+        confirm_close: true,
+
+        animation: true,
+
+        ondismiss: function () {
+          alert("PAYMENT CLOSED Redirecting to home");
+
+          if (!paymentCompleted) {
+            window.location.href = "/";
+          }
+        },
+      },
     };
 
-    const rzp = new window.Razorpay(options);
+    const razorpay = new window.Razorpay(options);
 
-    // Ensure we are setting up the events for payment failure and cancellation correctly
-    rzp.on("payment.failed", function (response) {
-      console.error("Payment failed:", response);
-      alert("Payment failed. Please try again.");
-      navigate(-2); // Go back to the previous page on failure
+    razorpay.on("payment.failed", function (response) {
+      console.error(response);
+      console.log(window.location.history);
+      alert(response.error?.description || "Payment Failed");
+
+      window.location.href = "/checkout";
     });
 
-    rzp.on("payment.cancelled", function () {
-      console.log("Payment cancelled.");
-      alert("Payment cancelled. Returning to the previous page.");
-      navigate(-2); // Go back to the previous page on cancellation
-    });
-
-    rzp.open(); // Open the Razorpay modal
-  }, [razorpayOrderId, razorpayKeyId, amount, currency, navigate]);
+    razorpay.open();
+  }, [
+    razorpayOrderId,
+    razorpayKeyId,
+    amount,
+    currency,
+    name,
+    phone,
+    email,
+    token,
+    navigate,
+  ]);
 
   return (
     <div
       style={{
         width: "100vw",
-        height: "91vh",
+        height: "100vh",
         display: "flex",
         justifyContent: "center",
         alignItems: "center",
-        backgroundColor: "transparent",
       }}
     >
-      <h1>
-        <Loader color="orange" />
-      </h1>
+      <Loader color="orange" />
     </div>
   );
 };

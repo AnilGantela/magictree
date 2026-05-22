@@ -258,6 +258,7 @@ const Checkout = () => {
         { headers: { Authorization: `Bearer ${token}` } },
       );
       setAddresses([...addresses, res.data]);
+
       setShowAddAddressForm(false);
       setNewAddress({
         street: "",
@@ -266,6 +267,7 @@ const Checkout = () => {
         zip: "",
         country: "",
       });
+      fetchAddresses();
     } catch (err) {
       console.error("Error adding address:", err);
       alert("Failed to add address.");
